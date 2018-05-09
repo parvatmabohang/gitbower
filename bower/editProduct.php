@@ -3,61 +3,53 @@ require("all.php");
 $uid = $_SESSION['uid'];
 $piid=$_GET['p'];
 $rt = new User;
+$it = new Image;
+$pt = new Product;
+$ut = new Upload;
+$dt = new Delete;
 if (isset($_POST['logout'])) {
     session_destroy();
     header("location:login.php");
 }
 if(isset($_GET['pId'])){
   $pid=$_GET['pId'];
-  $pidelete=$rt->pidelete($pid);
+  $pidelete=$dt->pidelete($pid);
   if($pidelete){echo "Item deleted";}
   else{echo "Unsuccessfull";}
 }
 $suser = $rt->getUser($uid);
-$product = $rt->getsProduct($uid,$piid);
+$product = $pt->getsProduct($uid,$piid);
 $icount=count($product);
 if(isset($_POST['update'])){
     $iname = $_POST['iname'];
     $idetail = $_POST['idetail'];
     $iprice = $_POST['iprice'];
     $files = $_FILES['files'];
-    $ifile = [];
-    //print_r($files['name']);
-    //echo count($files['name']);
     $icheck = strlen($files['name'][0]);
     if($icheck != 0) {
-    foreach ($files['name'] as $position => $file_name) {
-        $file_tmp = $files['tmp_name'][$position];
-        $file_name = $files['name'][$position];
-        $file_size =$files['size'][$position];
-        $expensions= array("jpeg","jpg","png");
-        $ifile[] = "image/$uid".$file_name;
-        $file_ext=strtolower(end(explode('.',$files['name'][$position])));
-        if (in_array($file_ext,$expensions) === true) {
-            //echo "OK";
-            move_uploaded_file($file_tmp,"image/$uid".$file_name);
-        } else {
-            echo "extension not allowed, please choose a PDF or JPEG or PNG file.";
+        $isend = $it->isend($uid,$files);
+    }
+    if ($isend == 789) {
+      echo "Unsuccessfull!!!";
+    } else {
+      $iupload = $ut->pUpdate($piid,$iname,$idetail,$iprice);
+      if ($iupload == 99) {
+        echo "Uploading failed!!!";
+      } else {
+        if($icheck != 0){
+        $iPic=$ut->picUpdate($piid, $isend);
+        if ($iPic) {
+        echo "Successfully Uploaded!!!";
         }
+        else {
+           echo "Image Not Uploaded!!!";
+        }
+      } else {
+          echo "Info Updated";
+      }
      }
     }
-    $iupload = $rt->pUpdate($piid,$iname,$idetail,$iprice);
-    if ($iupload == 99) {
-      echo "Uploading failed!!!";
-    } else {
-      if($icheck != 0){
-      $iPic=$rt->picUpdate($piid, $ifile);
-      if ($iPic) {
-      echo "Successfully Updated!!!";
-      }
-      else {
-         echo "Image Not Uploaded!!!";
-      }
-    }else {
-      echo "Info Updated";
-    }
 
-}
 }
 ?>
 <html>

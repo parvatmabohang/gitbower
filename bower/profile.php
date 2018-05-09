@@ -2,16 +2,20 @@
 require("all.php");
 $uid = $_SESSION['uid'];
 $rt = new User;
+$it = new Image;
+$pt = new Product;
+$ut = new Upload;
+$dt = new Delete;
 if (isset($_POST['logout'])) {
     session_destroy();
     header("location:login.php");
 }
 $suser = $rt->getUser($uid);
-$product = $rt->getuProduct($uid);
+$product = $pt->getuProduct($uid);
 $icount=count($product);
 if(isset($_GET['delId'])){
   $iid=$_GET['delId'];
-  $idelete=$rt->pdelete($iid);
+  $idelete=$dt->pdelete($iid);
   if($idelete){echo "Item deleted";}
   else{echo "Unsuccessfull";}
 }
@@ -20,52 +24,24 @@ if(isset($_POST['upload'])){
     $idetail = $_POST['idetail'];
     $iprice = $_POST['iprice'];
     $files = $_FILES['files'];
-    $ifile = [];
-    foreach ($files['name'] as $position => $file_name) {
-        $file_tmp = $files['tmp_name'][$position];
-        $file_name = $files['name'][$position];
-        $file_size =$files['size'][$position];
-        $expensions= array("jpeg","jpg","png");
-        $ifile[] = "image/$uid".$file_name;
-        $file_ext=strtolower(end(explode('.',$files['name'][$position])));
-        if (in_array($file_ext,$expensions) === true) {
-            //echo "OK";
-            move_uploaded_file($file_tmp,"image/$uid".$file_name);
-        } else {
-            echo "extension not allowed, please choose a PDF or JPEG or PNG file.";
-        }
-     }
-    //print_r($ifile);
-    //$allcount=count($ifile);
-    //echo $allcount;
-    //if ($allcount <= 1){
-    //  $allimage = $ifile[0];
-    //  echo "<br>";
-      //echo "image/$uid".$allimage;
-    //} else {
-    //for ($f=0;$f<$allcount-1;$f++) {
-      //$allconcat = $ifile[$f].","."image/$uid".$ifile[$f+1];
-      //$ifile[$f+1]=$allconcat;
-      //$allimage = $ifile[$f+1];
-    //}
-    //echo "<br>";
-    //echo "image/$uid".$allimage;
-  //}
-     //"image/$uid".$allimage
-    $iupload = $rt->pUpload($uid,$iname,$idetail,$iprice);
-    if ($iupload == 99) {
-      echo "Uploading failed!!!";
+    $isend = $it->isend($uid,$files);
+    if ($isend == 789) {
+      echo "Unsuccessfull!!!";
     } else {
-      //echo "Uploaded!!!";
-      $iPic=$rt->pPic($iupload, $ifile);
-      if ($iPic) {
-      echo "Successfully Uploaded!!!";
-      }
-      else {
-         echo "Image Not Uploaded!!!";
+      $iupload = $ut->pUpload($uid,$iname,$idetail,$iprice);
+      if ($iupload == 99) {
+        echo "Uploading failed!!!";
+      } else {
+        //echo "Uploaded!!!";
+        $iPic=$ut->pPic($iupload, $isend);
+        if ($iPic) {
+        echo "Successfully Uploaded!!!";
+        }
+        else {
+           echo "Image Not Uploaded!!!";
+        }
       }
     }
-
 }
 ?>
 <html>

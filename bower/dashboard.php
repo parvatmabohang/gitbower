@@ -2,12 +2,15 @@
 require("all.php");
 $uid = $_SESSION['uid'];
 $rt = new User;
+$pt = new Product;
+$ut = new Upload;
+$dt = new Delete;
 if (isset($_POST['logout'])) {
     session_destroy();
     header("location:login.php");
 }
 $suser = $rt->getUser($uid);
-$product = $rt->getProduct($uid);
+$product = $pt->getProduct($uid);
 $icount=count($product);
 ?>
 <html>
