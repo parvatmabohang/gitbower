@@ -1,5 +1,5 @@
 <?php
-require("all.php");
+require("user.php");
 $rt = new User;
 if (isset($_POST['login'])) {
     $uemail = $_POST['uemail'];

@@ -1,5 +1,10 @@
 <?php
-require("all.php");
+require("user.php");
+require("product.php");
+require("upload.php");
+require("delete.php");
+require("image.php");
+
 $uid = $_SESSION['uid'];
 $piid=$_GET['p'];
 $rt = new User;
