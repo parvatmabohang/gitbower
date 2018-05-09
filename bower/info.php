@@ -16,46 +16,9 @@ if (isset($_POST['logout'])) {
     session_destroy();
     header("location:login.php");
 }
-if(isset($_GET['pId'])){
-  $pid=$_GET['pId'];
-  $pidelete=$dt->pidelete($pid);
-  if($pidelete){echo "Item deleted";}
-  else{echo "Unsuccessfull";}
-}
 $suser = $rt->getUser($uid);
 $product = $pt->getsProduct($uid,$piid);
 $icount=count($product);
-if(isset($_POST['update'])){
-    $iname = $_POST['iname'];
-    $idetail = $_POST['idetail'];
-    $iprice = $_POST['iprice'];
-    $files = $_FILES['files'];
-    $icheck = strlen($files['name'][0]);
-    if($icheck != 0) {
-        $isend = $it->isend($uid,$files);
-    }
-    if ($isend == 789) {
-      echo "Unsuccessfull!!!";
-    } else {
-      $iupload = $ut->pUpdate($piid,$iname,$idetail,$iprice);
-      if ($iupload == 99) {
-        echo "Uploading failed!!!";
-      } else {
-        if($icheck != 0){
-        $iPic=$ut->picUpdate($piid, $isend);
-        if ($iPic) {
-        echo "Successfully Uploaded!!!";
-        }
-        else {
-           echo "Image Not Uploaded!!!";
-        }
-      } else {
-          echo "Info Updated";
-      }
-     }
-    }
-
-}
 ?>
 <html>
 <head>
@@ -100,7 +63,7 @@ if(isset($_POST['update'])){
   Email:-  <?=$suser['uemail']; ?>
   </div><br>
 <div class="container">
-  <u><h4>Edit Your Product  <span style="font-size:15px;">(Product ID:- <i style="color:red;font-size:15px;"><?= $product[0]['id'] ?></i>) </span></h4></u>
+  <u><h5>Product Details  <span style="font-size:15px;">(Product ID:- <i style="color:red;font-size:15px;"><?= $product[0]['id'] ?></i>) </span></h5></u>
 
 
 </div>
@@ -108,57 +71,34 @@ if(isset($_POST['update'])){
   <div class="row">
     <div class="col-sm-4">
       <p>Item Images:</p>
-      <div class="container">
-        <div class="row">
-        <?php for ($f = 0;$f <=$icount-1; $f++ ) {  ?>
-          <div class="col-md-5">
-            <div class="thumbnail">
-            <a href="#" onclick="confirmDelete(<?php echo $product[$f]['pid']; ?>);"> <i class="fa fa-close" style="font-size:10px;padding-left:110px;color:red"></i></a>
-             <img  src="<?= $product[$f]['ipic'] ?>"  alt="Lights" style="width:100%"><br>
+            <div class="fotorama" data-nav="thumbs" data-allowfullscreen="true">
+        <?php for ($f = 0;$f <=$icount-1; $f++ ) {  ?><?php $iexplode=explode("/",$product[$f]['ipic']);$iexp=$iexplode[0]."/600".$iexplode[1];?>
+            <img  src="<?= $iexp?>">
              </a>
-            </div>
-         </div>
        <?php } ?>
-    </div></div>
+     </div>
+
+
   </div>
     <div class="col-sm-8">
       <div class="modal-body">
-        <form method="post" action="editProduct.php?p=<?=$piid?>" enctype="multipart/form-data" id="ushobby" >
+
           <div class="form-group">
-            <label for="text">Item Name:</label>
-            <input type="text" class="form-control" value="<?= $product[0]['iname']?>" name="iname" required>
+            <label for="text">Item Name:-<i style="color:red;"></label> <?= $product[0]['iname']?></i>
           </div>
           <div class="form-group">
-            <label for="text">Item Detail:</label>
-            <textarea type="text" class="form-control" name="idetail" required> <?= $product[0]['idetail']?></textarea>
+            <label for="text">Item Detail:-</label><i style="color:red;"><?= $product[0]['idetail']?></i>
           </div>
           <div class="form-group">
-            <label for="text">Item Price:</label>
-            <input type="number" class="form-control" value="<?= $product[0]['iprice']?>" name="iprice" required>
+            <label for="text">Item Price:-</label><i style="color:red;"><?= $product[0]['iprice']?></i>
           </div>
-         <div class="form-group">
-             <label for="text">Upload Product pic: <i style="color:red;font-size:15px">(You can choose multiple images...)</i></label>
-             <input type="file" class="form-control"  name="files[]" id="file" multiple>
-           </div>
-            <button type="submit" class="btn btn-primary" name="update">Submit</button>
+        <form method="post" action="info.php?p=<?=$piid?>" enctype="multipart/form-data" id="ushobby" >
+            <button type="submit" class="btn btn-primary" name="update">Buy</button>
          </form>
       </div>
   </div>
   </div>
 </div>
 
-<script>
-function confirmDelete(pid)
-{
-   //alert(textMessage);
-   var confirmDel = confirm('Are you sure you want to delete');
-
-   if(confirmDel)
-   {
-      //alert('members.php?delId='+textMessage);
-     window.location.href = 'editProduct.php?p=<?=$piid?>&pId='+pid
-   }
-}
-</script>
 </body>
 </html>

@@ -63,6 +63,7 @@ $icount=count($product);
        <th>Item Name</th>
        <th>Item Detail</th>
        <th>Item Price</th>
+        <th>Action</th>
     </tr>
    </thead>
    <tbody>
@@ -77,6 +78,7 @@ $icount=count($product);
        <td><?= $product[$i]['iname']?></td>
        <td><?= $product[$i]['idetail']?></td>
        <td><?= $product[$i]['iprice']?></td>
+       <td><a href="info.php?p=<?=$product[$i]['id']?>">Want to buy</a></td>
      </tr>
      <?php } ?>
    </tbody>
