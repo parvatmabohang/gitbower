@@ -1,16 +1,6 @@
 <?php
-require("user.php");
-require("product.php");
-require("upload.php");
-require("delete.php");
-require("image.php");
-
+require("unity.php");
 $uid = $_SESSION['uid'];
-$rt = new User;
-$it = new Image;
-$pt = new Product;
-$ut = new Upload;
-$dt = new Delete;
 if (isset($_POST['logout'])) {
     session_destroy();
     header("location:login.php");
@@ -20,33 +10,9 @@ $product = $pt->getuProduct($uid);
 $icount=count($product);
 if(isset($_GET['delId'])){
   $iid=$_GET['delId'];
-  $idelete=$dt->pdelete($iid);
+  $idelete=$pt->pdelete($iid);
   if($idelete){echo "Item deleted";}
   else{echo "Unsuccessfull";}
-}
-if(isset($_POST['upload'])){
-    $iname = $_POST['iname'];
-    $idetail = $_POST['idetail'];
-    $iprice = $_POST['iprice'];
-    $files = $_FILES['files'];
-    $isend = $it->isend($uid,$files);
-    if ($isend == 789) {
-      echo "Unsuccessfull!!!";
-    } else {
-      $iupload = $ut->pUpload($uid,$iname,$idetail,$iprice);
-      if ($iupload == 99) {
-        echo "Uploading failed!!!";
-      } else {
-        //echo "Uploaded!!!";
-        $iPic=$ut->pPic($iupload, $isend);
-        if ($iPic) {
-        echo "Successfully Uploaded!!!";
-        }
-        else {
-           echo "Image Not Uploaded!!!";
-        }
-      }
-    }
 }
 ?>
 <html>
@@ -105,7 +71,7 @@ if(isset($_POST['upload'])){
 
        <!-- Modal body -->
        <div class="modal-body">
-         <form method="post" action="profile.php" enctype="multipart/form-data" id="ushobby" >
+         <form method="post" action="function.php" enctype="multipart/form-data" id="ushobby" >
            <div class="form-group">
              <label for="text">Item Name:</label>
              <input type="text" class="form-control" name="iname" required>

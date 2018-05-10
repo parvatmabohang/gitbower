@@ -1,17 +1,7 @@
 <?php
-require("user.php");
-require("product.php");
-require("upload.php");
-require("delete.php");
-require("image.php");
-
+require("unity.php");
 $uid = $_SESSION['uid'];
 $piid=$_GET['p'];
-$rt = new User;
-$it = new Image;
-$pt = new Product;
-$ut = new Upload;
-$dt = new Delete;
 if (isset($_POST['logout'])) {
     session_destroy();
     header("location:login.php");

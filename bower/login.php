@@ -1,6 +1,5 @@
 <?php
-require("user.php");
-$rt = new User;
+require("unity.php");
 if (isset($_POST['login'])) {
     $uemail = $_POST['uemail'];
     $upw = $_POST['upw'];

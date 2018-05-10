@@ -1,61 +1,20 @@
 <?php
-require("user.php");
-require("product.php");
-require("upload.php");
-require("delete.php");
-require("image.php");
-
+require("unity.php");
 $uid = $_SESSION['uid'];
 $piid=$_GET['p'];
-$rt = new User;
-$it = new Image;
-$pt = new Product;
-$ut = new Upload;
-$dt = new Delete;
 if (isset($_POST['logout'])) {
     session_destroy();
     header("location:login.php");
 }
 if(isset($_GET['pId'])){
   $pid=$_GET['pId'];
-  $pidelete=$dt->pidelete($pid);
+  $pidelete=$pt->pidelete($pid);
   if($pidelete){echo "Item deleted";}
   else{echo "Unsuccessfull";}
 }
 $suser = $rt->getUser($uid);
 $product = $pt->getsProduct($uid,$piid);
 $icount=count($product);
-if(isset($_POST['update'])){
-    $iname = $_POST['iname'];
-    $idetail = $_POST['idetail'];
-    $iprice = $_POST['iprice'];
-    $files = $_FILES['files'];
-    $icheck = strlen($files['name'][0]);
-    if($icheck != 0) {
-        $isend = $it->isend($uid,$files);
-    }
-    if ($isend == 789) {
-      echo "Unsuccessfull!!!";
-    } else {
-      $iupload = $ut->pUpdate($piid,$iname,$idetail,$iprice);
-      if ($iupload == 99) {
-        echo "Uploading failed!!!";
-      } else {
-        if($icheck != 0){
-        $iPic=$ut->picUpdate($piid, $isend);
-        if ($iPic) {
-        echo "Successfully Uploaded!!!";
-        }
-        else {
-           echo "Image Not Uploaded!!!";
-        }
-      } else {
-          echo "Info Updated";
-      }
-     }
-    }
-
-}
 ?>
 <html>
 <head>
@@ -123,7 +82,7 @@ if(isset($_POST['update'])){
   </div>
     <div class="col-sm-8">
       <div class="modal-body">
-        <form method="post" action="editProduct.php?p=<?=$piid?>" enctype="multipart/form-data" id="ushobby" >
+        <form method="post" action="function.php?p=<?=$piid?>" enctype="multipart/form-data" id="ushobby" >
           <div class="form-group">
             <label for="text">Item Name:</label>
             <input type="text" class="form-control" value="<?= $product[0]['iname']?>" name="iname" required>
