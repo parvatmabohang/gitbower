@@ -9,7 +9,6 @@ if (isset($_POST['logout'])) {
     session_destroy();
     header("location:login.php");
 }
-//$suser = $rt->getUser($uid);
 $product = $pt->getsProduct($puid,$piid);
 $b=0;
 while ($piid == $product[$b]['id']){$b++;}

@@ -123,13 +123,11 @@ if(isset($_GET['delId'])){
    </thead>
    <tbody>
      <?php
-        for ($i = 0;$i<$b-1;$i++) { ?>
+        for ($i=0;$i<=$b-1;$i++) { ?>
      <tr>
        <td><?= $product[$i]['id']?></td>
        <td><img src="<?= $product[$i]['ipic'] ?>" height="92" width="92">
-      <?php
-           $getSeller=$rt->getUser($product[$i]['uid']);
-        ?><div style="margin-top:10px;">By: <a href="#" style="color:blue;"> <?=$uidname?></a></div></td>
+       <div style="margin-top:10px;">By: <a href="#" style="color:blue;"> <?=$uidname?></a></div></td>
        <td><?= $product[$i]['iname']?></td>
        <td><?= $product[$i]['idetail']?></td>
        <td><?= $product[$i]['iprice']?></td>

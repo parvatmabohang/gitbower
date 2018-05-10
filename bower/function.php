@@ -1,6 +1,6 @@
 <?php
 require("unity.php");
-$uid = $_SESSION['uid'];
+$uid = $_SESSION['uid'][0];
 $piid=$_GET['p'];
 if(isset($_POST['upload'])){
     $iname = $_POST['iname'];

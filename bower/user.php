@@ -1,5 +1,5 @@
 <?php
-error_reporting(0);
+//error_reporting(0);
 session_start();
 require("server.php");
 class User
@@ -27,18 +27,6 @@ class User
             return 900;
         }
 
-     }
-     function getUser($uid)
-     {
-         $conn = new Server;
-         $con = $conn->connect();
-         $getU = $con->prepare("SELECT * FROM user where uid=?");
-         $getU->bind_param('i',$uid);
-         $getU->execute();
-         $resultU = $getU->get_result();
-         $roow = $resultU->fetch_assoc();
-         //$sname=$roow['uname'];
-         return $roow;
      }
 }
 ?>
