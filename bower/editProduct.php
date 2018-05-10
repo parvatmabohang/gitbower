@@ -1,7 +1,18 @@
 <?php
 require("unity.php");
-$uid = $_SESSION['uid'];
+$uid = $_SESSION['uid'][0];
+$uidname = $_SESSION['uid'][1];
+$uidemail = $_SESSION['uid'][2];
 $piid=$_GET['p'];
+$ty="";
+$ty=$_GET['msg'];
+if ($ty == 1) {
+echo "Successfully Uploaded!!!";
+} elseif($ty == 2) {
+  echo "Unsuccessfull!!!";
+} elseif ($ty == 3) {
+  echo "Successfully Updated!!!";
+} else { }
 if (isset($_POST['logout'])) {
     session_destroy();
     header("location:login.php");
@@ -12,9 +23,10 @@ if(isset($_GET['pId'])){
   if($pidelete){echo "Item deleted";}
   else{echo "Unsuccessfull";}
 }
-$suser = $rt->getUser($uid);
+//$suser = $rt->getUser($uid);
 $product = $pt->getsProduct($uid,$piid);
-$icount=count($product);
+$b=0;
+while ($piid == $product[$b]['id']){$b++;}
 ?>
 <html>
 <head>
@@ -55,8 +67,8 @@ $icount=count($product);
     </div>
   </nav><br>
   <div class="container">
-  Name:-  <a href="profile.php" style="color:red;"> <?=$suser['uname']; ?></a> <br>
-  Email:-  <?=$suser['uemail']; ?>
+  Name:-  <a href="profile.php" style="color:red;"> <?=$uidname ?></a> <br>
+  Email:-  <?=$uidemail ?>
   </div><br>
 <div class="container">
   <u><h4>Edit Your Product  <span style="font-size:15px;">(Product ID:- <i style="color:red;font-size:15px;"><?= $product[0]['id'] ?></i>) </span></h4></u>
@@ -69,13 +81,16 @@ $icount=count($product);
       <p>Item Images:</p>
       <div class="container">
         <div class="row">
-        <?php for ($f = 0;$f <=$icount-1; $f++ ) {  ?>
+        <?php for ($f = 0;$f <=$b-1; $f++ ) {  ?>
           <div class="col-md-5">
+            <?php $tcount = strlen($product[0]['ipic']); if($tcount !=0){?>
             <div class="thumbnail">
             <a href="#" onclick="confirmDelete(<?php echo $product[$f]['pid']; ?>);"> <i class="fa fa-close" style="font-size:10px;padding-left:110px;color:red"></i></a>
              <img  src="<?= $product[$f]['ipic'] ?>"  alt="Lights" style="width:100%"><br>
              </a>
-            </div>
+           </div><?php } else { ?>
+            <h5> No image..You can upload </h5>
+           <?php }?>
          </div>
        <?php } ?>
     </div></div>

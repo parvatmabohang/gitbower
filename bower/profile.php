@@ -1,13 +1,22 @@
 <?php
 require("unity.php");
-$uid = $_SESSION['uid'];
+$uid = $_SESSION['uid'][0];
+$uidname = $_SESSION['uid'][1];
+$uidemail = $_SESSION['uid'][2];
+$ty="";
+$ty=$_GET['msg'];
+if ($ty == 1) {
+echo "Successfully Uploaded!!!";
+} elseif($ty == 3||$ty == 2) {
+  echo "Unsuccessfull!!!";
+} else { }
 if (isset($_POST['logout'])) {
     session_destroy();
     header("location:login.php");
 }
-$suser = $rt->getUser($uid);
 $product = $pt->getuProduct($uid);
-$icount=count($product);
+$b=0;
+while ($uid == $product[$b]['uid']){$b++;}
 if(isset($_GET['delId'])){
   $iid=$_GET['delId'];
   $idelete=$pt->pdelete($iid);
@@ -52,8 +61,8 @@ if(isset($_GET['delId'])){
     </div>
   </nav><br>
   <div class="container">
-  Name:-  <a href="profile.php" style="color:red;"> <?=$suser['uname']; ?></a> <br>
-  Email:-  <?=$suser['uemail']; ?>
+  Name:-  <a href="profile.php" style="color:red;"> <?=$uidname ?></a> <br>
+  Email:-  <?=$uidemail ?>
   </div><br>
 <div class="container">
   <u><h4>Your Product   <t><t>  <i class="fa fa-plus-circle" data-toggle="modal" data-target="#myModal" style="font-size:15px;color:red">Add new product</i></h4></u>
@@ -114,13 +123,13 @@ if(isset($_GET['delId'])){
    </thead>
    <tbody>
      <?php
-        for ($i = 0;$i<$icount;$i++) { ?>
+        for ($i = 0;$i<$b-1;$i++) { ?>
      <tr>
        <td><?= $product[$i]['id']?></td>
        <td><img src="<?= $product[$i]['ipic'] ?>" height="92" width="92">
       <?php
            $getSeller=$rt->getUser($product[$i]['uid']);
-        ?><div style="margin-top:10px;">By: <a href="#" style="color:blue;"> <?= $getSeller['uname'] ?></a></div></td>
+        ?><div style="margin-top:10px;">By: <a href="#" style="color:blue;"> <?=$uidname?></a></div></td>
        <td><?= $product[$i]['iname']?></td>
        <td><?= $product[$i]['idetail']?></td>
        <td><?= $product[$i]['iprice']?></td>

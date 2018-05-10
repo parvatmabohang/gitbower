@@ -16,10 +16,13 @@ class User
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
+        $harray = [];
         $upw1=$row["upw"];
-        $uid=$row['uid'];
+        $harray[]=$row['uid'];
+        $harray[]=$row['uname'];
+        $harray[]=$row['uemail'];
         if ($upw1 == $upwn) {
-            return $uid;
+            return $harray;
         } else {
             return 900;
         }

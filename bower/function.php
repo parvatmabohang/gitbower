@@ -13,15 +13,17 @@ if(isset($_POST['upload'])){
     } else {
       $iupload = $pt->pUpload($uid,$iname,$idetail,$iprice);
       if ($iupload == 99) {
+        header("location:profile.php?msg=3");
         echo "Uploading failed!!!";
       } else {
         //echo "Uploaded!!!";
         $iPic=$pt->pPic($iupload, $isend);
         if ($iPic) {
-        header("location:profile.php");
+        header("location:profile.php?msg=1");
         echo "Successfully Uploaded!!!";
         }
         else {
+            header("location:profile.php?msg=2");
            echo "Image Not Uploaded!!!";
         }
       }
@@ -46,14 +48,15 @@ if(isset($_POST['update'])){
         if($icheck != 0){
         $iPic=$pt->picUpdate($piid, $isend);
         if ($iPic) {
-        header("location:editProduct.php?p=$piid");
+        header("location:editProduct.php?p=$piid&msg=1");
         echo "Successfully Uploaded!!!";
         }
         else {
+           header("location:editProduct.php?p=$piid&msg=2");
            echo "Image Not Uploaded!!!";
         }
       } else {
-          header("location:editProduct.php?p=$piid");
+          header("location:editProduct.php?p=$piid&msg=3");
           echo "Info Updated";
       }
      }

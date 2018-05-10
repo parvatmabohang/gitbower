@@ -1,11 +1,11 @@
 <?php
 require("unity.php");
-$uid = $_SESSION['uid'];
+$uid = $_SESSION['uid'][0];
+$uidname = $_SESSION['uid'][1];
 if (isset($_POST['logout'])) {
     session_destroy();
     header("location:login.php");
 }
-$suser = $rt->getUser($uid);
 $product = $pt->getProduct($uid);
 $icount=count($product);
 ?>
@@ -63,13 +63,11 @@ $icount=count($product);
      <tr>
        <td><?= $product[$i]['id']?></td>
        <td><img src="<?= $product[$i]['ipic'] ?>" height="92" width="92">
-      <?php
-           $getSeller=$rt->getUser($product[$i]['uid']);
-        ?><div style="margin-top:10px;">By: <a href="#" style="color:blue;"> <?= $getSeller['uname'] ?></a></div></td>
+       <div style="margin-top:10px;">By: <a href="#" style="color:blue;"> <?= $product[$i]['uname'] ?></a></div></td>
        <td><?= $product[$i]['iname']?></td>
        <td><?= $product[$i]['idetail']?></td>
        <td><?= $product[$i]['iprice']?></td>
-       <td><a href="info.php?p=<?=$product[$i]['id']?>">Want to buy</a></td>
+       <td><a href="info.php?p=<?=$product[$i]['id']?>&q=<?=$product[$i]['uid']?>  ">Want to buy</a></td>
      </tr>
      <?php } ?>
    </tbody>

@@ -1,14 +1,18 @@
 <?php
 require("unity.php");
-$uid = $_SESSION['uid'];
+$uid = $_SESSION['uid'][0];
+$uidname = $_SESSION['uid'][1];
+$uidemail = $_SESSION['uid'][2];
 $piid=$_GET['p'];
+$puid=$_GET['q'];
 if (isset($_POST['logout'])) {
     session_destroy();
     header("location:login.php");
 }
-$suser = $rt->getUser($uid);
-$product = $pt->getsProduct($uid,$piid);
-$icount=count($product);
+//$suser = $rt->getUser($uid);
+$product = $pt->getsProduct($puid,$piid);
+$b=0;
+while ($piid == $product[$b]['id']){$b++;}
 ?>
 <html>
 <head>
@@ -49,8 +53,8 @@ $icount=count($product);
     </div>
   </nav><br>
   <div class="container">
-  Name:-  <a href="profile.php" style="color:red;"> <?=$suser['uname']; ?></a> <br>
-  Email:-  <?=$suser['uemail']; ?>
+  Name:-  <a href="profile.php" style="color:red;"> <?=$uidname ?></a> <br>
+  Email:-  <?=$uidemail ?>
   </div><br>
 <div class="container">
   <u><h5>Product Details  <span style="font-size:15px;">(Product ID:- <i style="color:red;font-size:15px;"><?= $product[0]['id'] ?></i>) </span></h5></u>
@@ -62,8 +66,8 @@ $icount=count($product);
     <div class="col-sm-4">
       <p>Item Images:</p>
             <div class="fotorama" data-nav="thumbs" data-allowfullscreen="true">
-        <?php for ($f = 0;$f <=$icount-1; $f++ ) {  ?><?php $iexplode=explode("/",$product[$f]['ipic']);$iexp=$iexplode[0]."/600".$iexplode[1];?>
-            <img  src="<?= $iexp?>">
+        <?php for ($f = 0;$f <=$b-1; $f++ ) {  ?><?php $iexplode=explode("/",$product[$f]['ipic']);$iexp=$iexplode[0]."/600".$iexplode[1];?>
+              <?php $tcount = strlen($product[0]['ipic']); if($tcount !=0){?>  <img  src="<?= $iexp?>"> <?php } else { ?><h5> No images... </h5> <? }?>
              </a>
        <?php } ?>
      </div>

@@ -71,8 +71,8 @@ class Product
      {
          $conn = new Server;
          $con = $conn->connect();
-         $getU = $con->prepare("SELECT istore.*,iimage.ipic FROM istore INNER JOIN iimage ON istore.uid = ? and istore.id=iimage.id GROUP BY istore.id");
-         $getU->bind_param('i',$uid);
+         $getU = $con->prepare("SELECT istore.*,iimage.ipic FROM istore LEFT JOIN iimage ON istore.uid = ? and istore.id=iimage.id  GROUP BY istore.id ORDER BY istore.uid=? desc");
+         $getU->bind_param('ii',$uid,$uid);
          $getU->execute();
          $resultU = $getU->get_result();
          $harray = [];
@@ -83,12 +83,12 @@ class Product
          return $harray;
 
        }
-       function getsProduct($uid,$piid)
+       function getsProduct($puid,$piid)
        {
            $conn = new Server;
            $con = $conn->connect();
-           $getU = $con->prepare("SELECT istore.*,iimage.pid,iimage.ipic FROM istore INNER JOIN iimage ON istore.uid = ? and istore.id = ? and istore.id=iimage.id");
-           $getU->bind_param('ii',$uid,$piid);
+           $getU = $con->prepare("SELECT istore.*,iimage.pid,iimage.ipic FROM istore LEFT JOIN iimage ON istore.uid = ? and istore.id = ? and istore.id=iimage.id order by istore.id = ? desc");
+           $getU->bind_param('iii',$puid,$piid,$piid);
            $getU->execute();
            $resultU = $getU->get_result();
            $harray = [];
@@ -104,8 +104,8 @@ class Product
      {
        $conn = new Server;
        $con = $conn->connect();
-       $getU = $con->prepare("SELECT istore.*,iimage.ipic FROM istore INNER JOIN iimage ON istore.id=iimage.id GROUP BY istore.id");
-       $getU->bind_param('i',$uid);
+       $getU = $con->prepare("SELECT istore.*,iimage.ipic,user.uname FROM istore LEFT JOIN iimage ON istore.id=iimage.id LEFT JOIN user ON user.uid = istore.uid GROUP BY istore.id");
+       //$getU->bind_param('i',$uid);
        $getU->execute();
        $resultU = $getU->get_result();
        $harray = [];
