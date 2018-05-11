@@ -4,13 +4,14 @@ class Product
 {
   function pUpload($iuid, $iname, $idetail, $iprice){
      $conn = new Server;
+     $event = "Product Stored";
      $con = $conn->connect();
-     $usave = $con->prepare('INSERT INTO istore(uid,iname,idetail,iprice) VALUES (?,?,?,?)');
-     $usave->bind_param('issi',$iuid, $iname,$idetail,$iprice);
+     $usave = $con->prepare('INSERT INTO istore(uid,iname,idetail,iprice,event) VALUES (?,?,?,?,?)');
+     $usave->bind_param('issis',$iuid, $iname,$idetail,$iprice,$event);
      $usave->execute();
      $last_id = $usave->insert_id;
-     $update = $con->prepare('INSERT INTO iupdate(updateuid,updateuserid,updateiid) VALUES (?,?,?)');
-     $update->bind_param('iii',$iuid,$iuid,$last_id);
+     $update = $con->prepare('INSERT INTO iupdate(updateuid,updateuserid,updateiid,event) VALUES (?,?,?,?)');
+     $update->bind_param('iiis',$iuid,$iuid,$last_id,$event);
      $update->execute();
      //echo "New record created successfully. Last inserted ID is: " . $last_id;
      if ($usave && $update) {
@@ -21,15 +22,16 @@ class Product
    }
    function pUpdate($updateuid,$piid, $iname, $idetail, $iprice){
       $time = date("hisa");
+      $event = "Product Updated";
       $up= null;
       $conn = new Server;
       $con = $conn->connect();
-      $usave = $con->prepare('UPDATE istore set iname=?,idetail=?,iprice=? where id=?');
+      $usave = $con->prepare('UPDATE istore set iname=?,idetail=?,iprice=?,event=?,updatedat = null where id=?');
       //$usave = $con->prepare('UPDATE istore set iname=?,idetail=?,iprice=? where id=?');
-      $usave->bind_param('ssii',$iname,$idetail,$iprice,$piid);
+      $usave->bind_param('ssisi',$iname,$idetail,$iprice,$event,$piid);
       $usave->execute();
-      $update = $con->prepare('UPDATE iupdate set updateuserid=?, updatedat = null where updateiid = ?');
-      $update->bind_param('ii',$updateuid,$piid);
+      $update = $con->prepare('INSERT INTO iupdate(updateuid,updateuserid,updateiid,event) VALUES (?,?,?,?)');
+      $update->bind_param('iiis',$updateuid,$updateuid,$piid,$event);
       $update->execute();
       //$last_id = $usave->insert_id;
       //echo "New record created successfully. Last inserted ID is: " . $last_id;
