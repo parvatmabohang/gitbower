@@ -24,7 +24,7 @@ class User
         if ($upw1 == $upwn) {
             return $harray;
         } else {
-            return 900;
+            return 0;
         }
 
      }

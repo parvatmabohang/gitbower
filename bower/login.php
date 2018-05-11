@@ -4,7 +4,7 @@ if (isset($_POST['login'])) {
     $uemail = $_POST['uemail'];
     $upw = $_POST['upw'];
     $checkrt = $rt->loginUser($uemail,$upw);
-    if ($checkrt == 900) {
+    if ($checkrt == 0) {
         echo "Invalid user";
     } else {
         $_SESSION['uid']=$checkrt;

@@ -5,10 +5,14 @@ $uidname = $_SESSION['uid'][1];
 $uidemail = $_SESSION['uid'][2];
 $ty="";
 $ty=$_GET['msg'];
-if ($ty == 1) {
-echo "Successfully Uploaded!!!";
-} elseif($ty == 3||$ty == 2) {
-  echo "Unsuccessfull!!!";
+if ($ty == 4) {
+echo "Record Couldn't Uploaded!!!";
+} elseif($ty == 1) {
+  echo "Info is Updated but Image couldn't be moved";
+} elseif($ty == 2) {
+  echo "Record is Uploaded Successfully";
+} elseif($ty == 3) {
+  echo "Info is Uploaded but not image";
 } else { }
 if (isset($_POST['logout'])) {
     session_destroy();
@@ -80,7 +84,7 @@ if(isset($_GET['delId'])){
 
        <!-- Modal body -->
        <div class="modal-body">
-         <form method="post" action="function.php" enctype="multipart/form-data" id="ushobby" >
+         <form method="post" action="function.php?>" enctype="multipart/form-data" id="ushobby" >
            <div class="form-group">
              <label for="text">Item Name:</label>
              <input type="text" class="form-control" name="iname" required>
@@ -131,7 +135,7 @@ if(isset($_GET['delId'])){
        <td><?= $product[$i]['iname']?></td>
        <td><?= $product[$i]['idetail']?></td>
        <td><?= $product[$i]['iprice']?></td>
-       <td><a href="#" onclick="confirmDelete(<?php echo $product[$i]['id']; ?>);" >Delete</a> or  <a href="editProduct.php?p=<?=$product[$i]['id'] ?>" style="text-decoration:none;"> EDIT</a> </form></td>
+       <td><a href="#" onclick="confirmDelete(<?php echo $product[$i]['id']; ?>);" >Delete</a> or  <a href="editProduct.php?p=<?=$product[$i]['id'] ?>&getSellerID=<?= $product[$i]['uid'] ?>" style="text-decoration:none;"> EDIT</a> </form></td>
      </tr>
      <?php } ?>
    </tbody>

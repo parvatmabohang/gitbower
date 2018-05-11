@@ -52,7 +52,7 @@ class Image
             }
          }
          if ($gun == 0) {
-           return 789;
+           return 0;
          } else {
            return $ifile;
          }

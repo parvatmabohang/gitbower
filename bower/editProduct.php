@@ -4,14 +4,18 @@ $uid = $_SESSION['uid'][0];
 $uidname = $_SESSION['uid'][1];
 $uidemail = $_SESSION['uid'][2];
 $piid=$_GET['p'];
+$getSellerID="";
+$getSellerID=$_GET['getSellerID'];
 $ty="";
 $ty=$_GET['msg'];
-if ($ty == 1) {
-echo "Successfully Uploaded!!!";
-} elseif($ty == 2) {
-  echo "Unsuccessfull!!!";
-} elseif ($ty == 3) {
-  echo "Successfully Updated!!!";
+if ($ty == 4) {
+echo "Not Uploaded!!!";
+} elseif($ty == 1) {
+  echo "Record Successfully moved and Updated ";
+} elseif ($ty == 2) {
+  echo "Info Uploaded  and moved but not image uploaded ";
+} elseif($ty == 3) {
+  echo "Info Updated but image is empty";
 } else { }
 if (isset($_POST['logout'])) {
     session_destroy();
@@ -24,7 +28,7 @@ if(isset($_GET['pId'])){
   else{echo "Unsuccessfull";}
 }
 //$suser = $rt->getUser($uid);
-$product = $pt->getsProduct($uid,$piid);
+$product = $pt->getsProduct($getSellerID,$piid);
 $b=0;
 while ($piid == $product[$b]['id']){$b++;}
 ?>
@@ -97,14 +101,15 @@ while ($piid == $product[$b]['id']){$b++;}
   </div>
     <div class="col-sm-8">
       <div class="modal-body">
-        <form method="post" action="function.php?p=<?=$piid?>" enctype="multipart/form-data" id="ushobby" >
+        <?=$updat ?>
+        <form method="post" action="function.php?p=<?=$piid?>&getSellerID=<?= $getSellerID ?>" enctype="multipart/form-data" id="ushobby" >
           <div class="form-group">
             <label for="text">Item Name:</label>
             <input type="text" class="form-control" value="<?= $product[0]['iname']?>" name="iname" required>
           </div>
           <div class="form-group">
             <label for="text">Item Detail:</label>
-            <textarea type="text" class="form-control" name="idetail" required> <?= $product[0]['idetail']?></textarea>
+            <textarea class="form-control" name="idetail" required><?= $product[0]['idetail']?></textarea>
           </div>
           <div class="form-group">
             <label for="text">Item Price:</label>

@@ -9,25 +9,34 @@ class Product
      $usave->bind_param('issi',$iuid, $iname,$idetail,$iprice);
      $usave->execute();
      $last_id = $usave->insert_id;
+     $update = $con->prepare('INSERT INTO iupdate(updateuid,updateuserid,updateiid) VALUES (?,?,?)');
+     $update->bind_param('iii',$iuid,$iuid,$last_id);
+     $update->execute();
      //echo "New record created successfully. Last inserted ID is: " . $last_id;
-     if ($usave) {
+     if ($usave && $update) {
         return $last_id;
      } else {
-        return 99;
+        return 0;
      }
    }
-   function pUpdate($piid, $iname, $idetail, $iprice){
+   function pUpdate($updateuid,$piid, $iname, $idetail, $iprice){
+      $time = date("hisa");
+      $up= null;
       $conn = new Server;
       $con = $conn->connect();
       $usave = $con->prepare('UPDATE istore set iname=?,idetail=?,iprice=? where id=?');
+      //$usave = $con->prepare('UPDATE istore set iname=?,idetail=?,iprice=? where id=?');
       $usave->bind_param('ssii',$iname,$idetail,$iprice,$piid);
       $usave->execute();
+      $update = $con->prepare('UPDATE iupdate set updateuserid=?, updatedat = null where updateiid = ?');
+      $update->bind_param('ii',$updateuid,$piid);
+      $update->execute();
       //$last_id = $usave->insert_id;
       //echo "New record created successfully. Last inserted ID is: " . $last_id;
-      if ($usave) {
-         return $last_id;
+      if ($usave && $update) {
+         return 1;
       } else {
-         return 99;
+         return 0;
       }
     }
    function pPic($iid, $iimage){

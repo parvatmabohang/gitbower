@@ -2,30 +2,31 @@
 require("unity.php");
 $uid = $_SESSION['uid'][0];
 $piid=$_GET['p'];
+$getSellerID=$_GET['getSellerID'];
 if(isset($_POST['upload'])){
     $iname = $_POST['iname'];
     $idetail = $_POST['idetail'];
     $iprice = $_POST['iprice'];
     $files = $_FILES['files'];
-    $isend = $it->isend($uid,$files);
-    if ($isend == 789) {
-      echo "Unsuccessfull!!!";
+    $iupload = $pt->pUpload($uid,$iname,$idetail,$iprice);
+    if ($iupload == 0) {
+      header("location:profile.php?msg=4");
     } else {
-      $iupload = $pt->pUpload($uid,$iname,$idetail,$iprice);
-      if ($iupload == 99) {
-        header("location:profile.php?msg=3");
-        echo "Uploading failed!!!";
+      $isend = $it->isend($uid,$files);
+      if ($isend == 0) {
+        header("location:profile.php?msg=1");
+        //echo "Info Uploaded but not Image moved  Unsuccessfull!!!";
       } else {
-        //echo "Uploaded!!!";
         $iPic=$pt->pPic($iupload, $isend);
         if ($iPic) {
-        header("location:profile.php?msg=1");
-        echo "Successfully Uploaded!!!";
+        header("location:profile.php?msg=2");
+        //echo "Record Successfully Uploaded!!!";
         }
         else {
-            header("location:profile.php?msg=2");
-           echo "Image Not Uploaded!!!";
+            header("location:profile.php?msg=3");
+            //echo "Image Not Uploaded!!!";
         }
+
       }
     }
 }
@@ -34,32 +35,32 @@ if(isset($_POST['update'])){
     $idetail = $_POST['idetail'];
     $iprice = $_POST['iprice'];
     $files = $_FILES['files'];
+    $isend =2;
     $icheck = strlen($files['name'][0]);
+
+    $iupload = $pt->pUpdate($uid,$piid,$iname,$idetail,$iprice);
     if($icheck != 0) {
         $isend = $it->isend($uid,$files);
     }
-    if ($isend == 789) {
-      echo "Unsuccessfull!!!";
+    if ($isend == 0 && $iupload == 0) {
+      header("location:editProduct.php?p=$piid&getSellerID= $getSellerID&msg=4");
+      //echo "Record Unsuccessfull!!!";
     } else {
-      $iupload = $pt->pUpdate($piid,$iname,$idetail,$iprice);
-      if ($iupload == 99) {
-        echo "Uploading failed!!!";
-      } else {
-        if($icheck != 0){
-        $iPic=$pt->picUpdate($piid, $isend);
-        if ($iPic) {
-        header("location:editProduct.php?p=$piid&msg=1");
-        echo "Successfully Uploaded!!!";
-        }
-        else {
-           header("location:editProduct.php?p=$piid&msg=2");
-           echo "Image Not Uploaded!!!";
-        }
-      } else {
-          header("location:editProduct.php?p=$piid&msg=3");
-          echo "Info Updated";
+      if($icheck != 0){
+      $iPic=$pt->picUpdate($piid, $isend);
+      if ($iPic) {
+      header("location:editProduct.php?p=$piid&getSellerID=$getSellerID&msg=1");
+      //echo "Info Successfully moved and  Updated!!!";
       }
-     }
+      else {
+         header("location:editProduct.php?p=$piid&getSellerID=$getSellerID&msg=2");
+        // echo "Info Uploaded  and moved but not image uploaded !!!";
+      }
+    } else {
+        header("location:editProduct.php?p=$piid&getSellerID=$getSellerID&msg=3");
+        //echo "Info Updated but image is empty";
+    }
+
     }
 
 }
