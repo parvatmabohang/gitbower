@@ -7,11 +7,21 @@ class Product
      $event = "Product Stored";
      $con = $conn->connect();
      $usave = $con->prepare('INSERT INTO istore(uid,iname,idetail,iprice,event) VALUES (?,?,?,?,?)');
-     $usave->bind_param('issis',$iuid, $iname,$idetail,$iprice,$event);
+     $usave->bindParam(1, $iuid, PDO::PARAM_INT);
+     $usave->bindParam(2, $iname, PDO::PARAM_STR,30);
+     $usave->bindParam(3, $idetail, PDO::PARAM_STR,30);
+     $usave->bindParam(4, $iprice, PDO::PARAM_INT);
+     $usave->bindParam(5, $event, PDO::PARAM_STR,30);
+     //$usave->bind_param('issis',$iuid, $iname,$idetail,$iprice,$event);
      $usave->execute();
-     $last_id = $usave->insert_id;
+     $last_id = $con->lastInsertId();
+     //print_r($last_id);
      $update = $con->prepare('INSERT INTO iupdate(updateuid,updateuserid,updateiid,event) VALUES (?,?,?,?)');
-     $update->bind_param('iiis',$iuid,$iuid,$last_id,$event);
+     $update->bindParam(1, $iuid, PDO::PARAM_INT);
+     $update->bindParam(2, $iuid, PDO::PARAM_INT);
+     $update->bindParam(3, $last_id, PDO::PARAM_INT);
+     $update->bindParam(4, $event, PDO::PARAM_STR,30);
+     //$update->bind_param('iiis',$iuid,$iuid,$last_id,$event);
      $update->execute();
      //echo "New record created successfully. Last inserted ID is: " . $last_id;
      if ($usave && $update) {
@@ -28,10 +38,19 @@ class Product
       $con = $conn->connect();
       $usave = $con->prepare('UPDATE istore set iname=?,idetail=?,iprice=?,event=?,updatedat = null where id=?');
       //$usave = $con->prepare('UPDATE istore set iname=?,idetail=?,iprice=? where id=?');
-      $usave->bind_param('ssisi',$iname,$idetail,$iprice,$event,$piid);
+      $usave->bindParam(1, $iname, PDO::PARAM_STR,30);
+      $usave->bindParam(2, $idetail, PDO::PARAM_STR,30);
+      $usave->bindParam(3, $iprice, PDO::PARAM_INT);
+      $usave->bindParam(4, $event, PDO::PARAM_STR,30);
+      $usave->bindParam(5, $piid, PDO::PARAM_INT);
+      //$usave->bind_param('ssisi',$iname,$idetail,$iprice,$event,$piid);
       $usave->execute();
       $update = $con->prepare('INSERT INTO iupdate(updateuid,updateuserid,updateiid,event) VALUES (?,?,?,?)');
-      $update->bind_param('iiis',$updateuid,$updateuid,$piid,$event);
+      $update->bindParam(1, $updateuid, PDO::PARAM_INT);
+      $update->bindParam(2, $updateuid, PDO::PARAM_INT);
+      $update->bindParam(3, $piid, PDO::PARAM_INT);
+      $update->bindParam(4, $event, PDO::PARAM_STR,30);
+      //$update->bind_param('iiis',$updateuid,$updateuid,$piid,$event);
       $update->execute();
       //$last_id = $usave->insert_id;
       //echo "New record created successfully. Last inserted ID is: " . $last_id;
@@ -49,7 +68,9 @@ class Product
       $ui = $con->prepare("INSERT INTO iimage(id,ipic) VALUES (?,?)");
       for ($g = 0; $g <= $ifile-1;$g++)
       {
-         $ui->bind_param("is",$iid,$iimage[$g]);
+         $ui->bindParam(1, $iid, PDO::PARAM_INT);
+         $ui->bindParam(2, $iimage[$g], PDO::PARAM_STR,30);
+         //$ui->bind_param("is",$iid,$iimage[$g]);
          //echo $iimage[$g];
          $ui->execute();
       }
@@ -67,7 +88,9 @@ class Product
        $ui = $con->prepare("INSERT INTO iimage(id,ipic) VALUES (?,?)");
        for ($g = 0; $g <= $ifile-1;$g++)
        {
-          $ui->bind_param("is",$iid,$iimage[$g]);
+          $ui->bindParam(1, $iid, PDO::PARAM_INT);
+          $ui->bindParam(2, $iimage[$g], PDO::PARAM_STR,30);
+          //$ui->bind_param("is",$iid,$iimage[$g]);
           //echo $iimage[$g];
           $ui->execute();
        }
@@ -83,11 +106,12 @@ class Product
          $conn = new Server;
          $con = $conn->connect();
          $getU = $con->prepare("SELECT istore.*,iimage.ipic FROM istore LEFT JOIN iimage ON istore.uid = ? and istore.id=iimage.id  GROUP BY istore.id ORDER BY istore.uid=? desc");
-         $getU->bind_param('ii',$uid,$uid);
+         $getU->bindParam(1, $uid, PDO::PARAM_INT);
+         $getU->bindParam(2, $uid, PDO::PARAM_INT);
+         //$getU->bind_param('ii',$uid,$uid);
          $getU->execute();
-         $resultU = $getU->get_result();
          $harray = [];
-         while ($roow = $resultU->fetch_assoc()) {
+         while ($roow = $getU->fetch(PDO::FETCH_ASSOC)) {
              $harray[] = $roow;
          }
          //print_r($harray);
@@ -99,11 +123,13 @@ class Product
            $conn = new Server;
            $con = $conn->connect();
            $getU = $con->prepare("SELECT istore.*,iimage.pid,iimage.ipic FROM istore LEFT JOIN iimage ON istore.uid = ? and istore.id = ? and istore.id=iimage.id order by istore.id = ? desc");
-           $getU->bind_param('iii',$puid,$piid,$piid);
+           $getU->bindParam(1, $puid, PDO::PARAM_INT);
+           $getU->bindParam(2, $piid, PDO::PARAM_INT);
+           $getU->bindParam(3, $piid, PDO::PARAM_INT);
+           //$getU->bind_param('iii',$puid,$piid,$piid);
            $getU->execute();
-           $resultU = $getU->get_result();
            $harray = [];
-           while ($roow = $resultU->fetch_assoc()) {
+           while ($roow = $getU->fetch(PDO::FETCH_ASSOC)) {
                $harray[] = $roow;
            }
            //print_r($harray);
@@ -118,9 +144,8 @@ class Product
        $getU = $con->prepare("SELECT istore.*,iimage.ipic,user.uname FROM istore LEFT JOIN iimage ON istore.id=iimage.id LEFT JOIN user ON user.uid = istore.uid GROUP BY istore.id");
        //$getU->bind_param('i',$uid);
        $getU->execute();
-       $resultU = $getU->get_result();
        $harray = [];
-       while ($roow = $resultU->fetch_assoc()) {
+       while ($roow =  $getU->fetch(PDO::FETCH_ASSOC)) {
            $harray[] = $roow;
        }
        //print_r($harray);
@@ -131,7 +156,8 @@ class Product
           $conn=new Server;
           $con=$conn->connect();
           $st = $con->prepare('DELETE FROM istore WHERE id=?');
-          $st->bind_param('i', $iid);
+          $st->bindParam(1, $iid, PDO::PARAM_INT);
+          //$st->bind_param('i', $iid);
           $st->execute();
           if($st){
             return true;
@@ -143,7 +169,8 @@ class Product
            $conn=new Server;
            $con=$conn->connect();
            $st = $con->prepare('DELETE FROM iimage WHERE pid=?');
-           $st->bind_param('i', $pid);
+           $st->bindParam(1, $pid, PDO::PARAM_INT);
+           //$st->bind_param('i', $pid);
            $st->execute();
            if($st){
              return true;

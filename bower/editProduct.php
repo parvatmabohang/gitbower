@@ -89,7 +89,7 @@ while ($piid == $product[$b]['id']){$b++;}
           <div class="col-md-5">
             <?php $tcount = strlen($product[0]['ipic']); if($tcount !=0){?>
             <div class="thumbnail">
-            <a href="#" onclick="confirmDelete(<?php echo $product[$f]['pid']; ?>);"> <i class="fa fa-close" style="font-size:10px;padding-left:110px;color:red"></i></a>
+            <a href="#" onclick="confirmDelete(<?php echo $product[$f]['pid']; ?>,<?= $getSellerID ?>);"> <i class="fa fa-close" style="font-size:10px;padding-left:110px;color:red"></i></a>
              <img  src="<?= $product[$f]['ipic'] ?>"  alt="Lights" style="width:100%"><br>
              </a>
            </div><?php } else { ?>
@@ -127,7 +127,7 @@ while ($piid == $product[$b]['id']){$b++;}
 </div>
 
 <script>
-function confirmDelete(pid)
+function confirmDelete(pid,gid)
 {
    //alert(textMessage);
    var confirmDel = confirm('Are you sure you want to delete');
@@ -135,7 +135,7 @@ function confirmDelete(pid)
    if(confirmDel)
    {
       //alert('members.php?delId='+textMessage);
-     window.location.href = 'editProduct.php?p=<?=$piid?>&pId='+pid
+     window.location.href = 'editProduct.php?p=<?=$piid?>&pId='+pid+'&getSellerID=<?= $getSellerID ?>'
    }
 }
 </script>

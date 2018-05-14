@@ -12,10 +12,12 @@ class User
         $conn=new Server;
         $con=$conn->connect();
         $stmt = $con->prepare('SELECT * FROM user WHERE uemail = ?');
-        $stmt->bind_param('s', $uemail);
+        //$stmt->bind_param('s', $uemail);
+        $stmt->bindParam(1, $uemail, PDO::PARAM_STR,30);
         $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        //$result = $stmt->get_result();
+        //$row = $result->fetch_assoc();
         $harray = [];
         $upw1=$row["upw"];
         $harray[]=$row['uid'];
