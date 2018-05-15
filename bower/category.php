@@ -3,7 +3,7 @@ require("unity.php");
 $cat=$_GET['cat'];
 $product = $pt->getcsProduct($cat);
 $icount=count($product);
-$categoryInfo=$pt->categoryInfo();
+$categoryInfo=$ct->categoryInfo();
 $categoryCount=count($categoryInfo);
 ?>
 <html>
@@ -45,7 +45,7 @@ $categoryCount=count($categoryInfo);
               <ul class="dropdown-menu" style="border:0px;">
                 <li><a href="home.php" style="color:red;">All</a></li>
                 <?php for($ic=0;$ic<$categoryCount;$ic++) { ?>
-                <?php if($categoryInfo[$ic]['scategory']=="on"){?><li><a href="category.php?cat=<?= $categoryInfo[$ic]['ncategory']?>" style="color:red;"><?=$categoryInfo[$ic]['ncategory']?> </a></li> <?php } else {?><li class="disabled"><a href="#" style="color:red;"><?=$categoryInfo[$ic]['ncategory']?></a> </li><?php } ?>
+                <?php if($categoryInfo[$ic]['scategory']=="on"){?><li><a href="category.php?cat=<?= $categoryInfo[$ic]['cid']?>" style="color:red;"><?=$categoryInfo[$ic]['ncategory']?> </a></li> <?php } else {?><li class="disabled"><a href="#" style="color:red;"><?=$categoryInfo[$ic]['ncategory']?></a> </li><?php } ?>
                <?php } ?>
               </ul>
           </div>

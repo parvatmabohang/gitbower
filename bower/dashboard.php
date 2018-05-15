@@ -22,7 +22,7 @@ if($dId){
   echo "Unsuccessfull";
 }
 }
-$categoryInfo=$pt->categoryInfo();
+$categoryInfo=$ct->categoryInfo();
 $categoryCount=count($categoryInfo);
 ?>
 <html>
@@ -71,9 +71,9 @@ $categoryCount=count($categoryInfo);
               <ul class="dropdown-menu" style="border:0px;">
                   <li><a href="dashboard.php" style="color:red;">All</a></li>
                   <?php for($ic=0;$ic<$categoryCount;$ic++) { ?>
-                  <form class="form-inline" ><?php if($categoryInfo[$ic]['scategory']=="on"){?><li style="color:red;"><a href="dashboard.php" style="color:red;"><?= $categoryInfo[$ic]['ncategory']?></a> </li> (<input type="radio" onclick="scategory('on','<?= $categoryInfo[$ic]['ncategory']?>')" checked> On
-                   <input type="radio" onclick="scategory('off','<?= $categoryInfo[$ic]['ncategory']?>')" > Off) <i class="fa fa-remove" style="font-size:10px;color:red" onclick="dcategory('<?= $categoryInfo[$ic]['ncategory']?>')"></i> <?php } else {?><li class="disabled" style="color:red;"><?= $categoryInfo[$ic]['ncategory']?></li> (<input type="radio" onclick="scategory('on','<?= $categoryInfo[$ic]['ncategory']?>')" > On
-                   <input type="radio" onclick="scategory('off','<?= $categoryInfo[$ic]['ncategory']?>')" checked> Off)<i class="fa fa-remove" style="font-size:10px;color:red" onclick="dcategory('<?= $categoryInfo[$ic]['ncategory']?>')"></i><?php } ?></form>
+                  <form class="form-inline" ><?php if($categoryInfo[$ic]['scategory']=="on"){?><li style="color:red;"><a href="dashboard.php" style="color:red;"><?= $categoryInfo[$ic]['ncategory']?></a> </li><a href="categoryEdit.php?cId=<?= $categoryInfo[$ic]['cid'] ?>" style="font-size:10px;">Edit</a><?php } else {?>
+                    <li class="disabled" style="color:red;"><?= $categoryInfo[$ic]['ncategory']?></li><a href="categoryEdit.php?cId=<?= $categoryInfo[$ic]['cid'] ?>" style="font-size:10px;">Edit</a>
+                   <?php } ?></form>
 
                <?php } ?>
               </ul>

@@ -5,7 +5,7 @@ $uidname = $_SESSION['uid'][1];
 $uidemail = $_SESSION['uid'][2];
 $ty="";
 $ty=$_GET['msg'];
-$ty=$_GET['msg'];
+//$ty=$_GET['msg'];
 if ($ty == 4) {
 echo "Record Couldn't Uploaded!!!";
 } elseif($ty == 1) {
@@ -14,6 +14,10 @@ echo "Record Couldn't Uploaded!!!";
   echo "Record is Uploaded Successfully";
 } elseif($ty == 3) {
   echo "Info is Uploaded but not image";
+} elseif($ty == 6) {
+  echo "Category Created Successfully";
+} elseif ($ty == 5) {
+   echo "Category creation Unsuccessfull";
 } else { }
 
 if (isset($_POST['logout'])) {
@@ -43,7 +47,7 @@ if($dId){
   echo "Unsuccessfull";
 }
 }
-$categoryInfo=$pt->categoryInfo();
+$categoryInfo=$ct->categoryInfo();
 $categoryCount=count($categoryInfo);
 ?>
 <html>
@@ -147,19 +151,51 @@ border-radius: 50%;
               <ul class="dropdown-menu" style="border:0px;">
                   <li><a href="dashboard.php" style="color:red;">All</a></li>
                   <?php for($ic=0;$ic<$categoryCount;$ic++) { ?>
-                  <form class="form-inline" ><?php if($categoryInfo[$ic]['scategory']=="on"){?><li style="color:red;"><a href="dashboard.php" style="color:red;"><?= $categoryInfo[$ic]['ncategory']?></a> </li> (<input type="radio" onclick="scategory('on','<?= $categoryInfo[$ic]['ncategory']?>')" checked> On
-                   <input type="radio" onclick="scategory('off','<?= $categoryInfo[$ic]['ncategory']?>')" > Off)
-<i class="fa fa-remove" style="font-size:10px;color:red" onclick="dcategory('<?= $categoryInfo[$ic]['ncategory']?>')"></i>  <?php } else {?><li class="disabled" style="color:red;"><?= $categoryInfo[$ic]['ncategory']?></li> (<input type="radio" onclick="scategory('on','<?= $categoryInfo[$ic]['ncategory']?>')" > On
-                   <input type="radio" onclick="scategory('off','<?= $categoryInfo[$ic]['ncategory']?>')" checked> Off)
-<i class="fa fa-remove" style="font-size:10px;color:red" onclick="dcategory('<?= $categoryInfo[$ic]['ncategory']?>')"></i><?php } ?></form>
+                  <form class="form-inline" ><?php if($categoryInfo[$ic]['scategory']=="on"){?><li style="color:red;"><a href="dashboard.php" style="color:red;"><?= $categoryInfo[$ic]['ncategory']?></a> </li><a href="categoryEdit.php?cId=<?= $categoryInfo[$ic]['cid'] ?>" style="font-size:10px">Edit</a> <?php } else { ?>
+                    <li class="disabled" style="color:red;"><?= $categoryInfo[$ic]['ncategory']?></li><a href="categoryEdit.php?cId=<?= $categoryInfo[$ic]['cid'] ?>" style="font-size:10px;">Edit</a><?php } ?></form>
 
                <?php } ?>
               </ul>
           </div>
         </li>
+        <li class="nav-item">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myCat" style="border:0px;background-color:#343140;">
+    Create Category<i class="fa fa-plus" style="font-size:18px;color:white"></i>
+  </button></li>
       </ul>
     </div>
-  </nav><br>
+  </nav>
+  <!-- The Modal -->
+  <div class="modal fade" id="myCat">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Create New Category</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <form method="post" action="function.php?>" enctype="multipart/form-data" id="ushobby" >
+            <div class="form-group">
+              <label for="text">Category Name:</label>
+              <input type="text" class="form-control" name="icategory" placeholder="New Category"required>
+            </div>
+              <button type="submit" class="btn btn-primary" name="ncat">Submit</button>
+           </form>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <br>
   <div class="container">
   Name:-  <a href="profile.php" style="color:red;"> <?=$uidname ?></a> <br>
   Email:-  <?=$uidemail ?>
@@ -203,31 +239,15 @@ border-radius: 50%;
                   <input type="checkbox" name="istatus">
                   <span class="slider round"></span>
                 </label></div>
-                 <!-- Nav tabs -->
-                 <ul class="nav nav-tabs" role="tablist">
-                   <li class="nav-item">
-                       <a class="nav-link active" data-toggle="tab" href="#home">Select Category</a>
-                   </li>
-                   <li class="nav-item">
-                      <a class="nav-link" data-toggle="tab" href="#menu1">Create New Category</a>
-                   </li>
-               </ul>
-               <!-- Tab panes -->
-               <div class="tab-content">
-                   <div id="home" class="container tab-pane active"><br>
                      <div class="form-group">
+                       <label for="text">Select category:</label>
                        <select class="form-control" id="sel1" name="icategory">
                          <option>None</option>
                          <?php for($ic=0;$ic<$categoryCount;$ic++) { ?>
-                          <option><?=$categoryInfo[$ic]['ncategory'] ?></option>
+                          <option value="<?=$categoryInfo[$ic]['cid'] ?>"><?=$categoryInfo[$ic]['ncategory'] ?></option>
                         <?php } ?>
                       </select>
                      </div>
-                   </div>
-                   <div id="menu1" class="container tab-pane fade"><br>
-                      <input type="text" class="form-control" name="icategory" placeholder="Create Category">
-                   </div>
-               </div><br>
              <button type="submit" class="btn btn-primary" name="upload">Submit</button>
           </form>
        </div>
