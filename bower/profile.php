@@ -5,6 +5,7 @@ $uidname = $_SESSION['uid'][1];
 $uidemail = $_SESSION['uid'][2];
 $ty="";
 $ty=$_GET['msg'];
+$ty=$_GET['msg'];
 if ($ty == 4) {
 echo "Record Couldn't Uploaded!!!";
 } elseif($ty == 1) {
@@ -14,6 +15,7 @@ echo "Record Couldn't Uploaded!!!";
 } elseif($ty == 3) {
   echo "Info is Uploaded but not image";
 } else { }
+
 if (isset($_POST['logout'])) {
     session_destroy();
     header("location:login.php");
@@ -27,6 +29,22 @@ if(isset($_GET['delId'])){
   if($idelete){echo "Item deleted";}
   else{echo "Unsuccessfull";}
 }
+if(isset($_GET['oId'])&&isset($_GET['cId'])){
+$oId=$_GET['oId'];
+$cId=$_GET['cId'];
+$dId=$pt->cUpdate($cId,$oId);
+}
+if(isset($_GET['dId'])){
+$dId=$_GET['dId'];
+$dId=$pt->cDelete($dId);
+if($dId){
+  echo "Category Deleted";
+} else {
+  echo "Unsuccessfull";
+}
+}
+$categoryInfo=$pt->categoryInfo();
+$categoryCount=count($categoryInfo);
 ?>
 <html>
 <head>
@@ -39,6 +57,67 @@ if(isset($_GET['delId'])){
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
   <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+  <style>
+  .switch {
+position: relative;
+display: inline-block;
+width: 60px;
+height: 34px;
+}
+
+.switch input {display:none;}
+
+.slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #ccc;
+-webkit-transition: .4s;
+transition: .4s;
+}
+
+.slider:before {
+position: absolute;
+content: "";
+height: 26px;
+width: 26px;
+left: 4px;
+bottom: 4px;
+background-color: white;
+-webkit-transition: .4s;
+transition: .4s;
+}
+
+input:checked + .slider {
+background-color: #2196F3;
+}
+
+input:focus + .slider {
+box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+-webkit-transform: translateX(26px);
+-ms-transform: translateX(26px);
+transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+border-radius: 34px;
+}
+
+.slider.round:before {
+border-radius: 50%;
+}
+.disabled {
+    pointer-events:none;
+    opacity:0.5;
+}
+  </style>
 </head>
 <body>
   <nav class="navbar navbar-expand-md bg-dark navbar-dark">
@@ -60,6 +139,23 @@ if(isset($_GET['delId'])){
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">About Us</a>
+        </li>
+        <li class="nav-item">
+          <div class="dropdown">
+              <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="border:0px;background-color:#343140;color:white;">Category
+              <span class="caret"></span></button>
+              <ul class="dropdown-menu" style="border:0px;">
+                  <li><a href="dashboard.php" style="color:red;">All</a></li>
+                  <?php for($ic=0;$ic<$categoryCount;$ic++) { ?>
+                  <form class="form-inline" ><?php if($categoryInfo[$ic]['scategory']=="on"){?><li style="color:red;"><a href="dashboard.php" style="color:red;"><?= $categoryInfo[$ic]['ncategory']?></a> </li> (<input type="radio" onclick="scategory('on','<?= $categoryInfo[$ic]['ncategory']?>')" checked> On
+                   <input type="radio" onclick="scategory('off','<?= $categoryInfo[$ic]['ncategory']?>')" > Off)
+<i class="fa fa-remove" style="font-size:10px;color:red" onclick="dcategory('<?= $categoryInfo[$ic]['ncategory']?>')"></i>  <?php } else {?><li class="disabled" style="color:red;"><?= $categoryInfo[$ic]['ncategory']?></li> (<input type="radio" onclick="scategory('on','<?= $categoryInfo[$ic]['ncategory']?>')" > On
+                   <input type="radio" onclick="scategory('off','<?= $categoryInfo[$ic]['ncategory']?>')" checked> Off)
+<i class="fa fa-remove" style="font-size:10px;color:red" onclick="dcategory('<?= $categoryInfo[$ic]['ncategory']?>')"></i><?php } ?></form>
+
+               <?php } ?>
+              </ul>
+          </div>
         </li>
       </ul>
     </div>
@@ -101,6 +197,37 @@ if(isset($_GET['delId'])){
               <label for="text">Upload Product pic: <i style="color:red;font-size:15px">(You can choose multiple images...)</i></label>
               <input type="file" class="form-control"  name="files[]" id="file" multiple required>
             </div>
+            <div class="form-group">
+              <label for="text">Product Inactive or Active:</label><br>
+               <label class="switch"> <input type="hidden" name="istatus" value="off">
+                  <input type="checkbox" name="istatus">
+                  <span class="slider round"></span>
+                </label></div>
+                 <!-- Nav tabs -->
+                 <ul class="nav nav-tabs" role="tablist">
+                   <li class="nav-item">
+                       <a class="nav-link active" data-toggle="tab" href="#home">Select Category</a>
+                   </li>
+                   <li class="nav-item">
+                      <a class="nav-link" data-toggle="tab" href="#menu1">Create New Category</a>
+                   </li>
+               </ul>
+               <!-- Tab panes -->
+               <div class="tab-content">
+                   <div id="home" class="container tab-pane active"><br>
+                     <div class="form-group">
+                       <select class="form-control" id="sel1" name="icategory">
+                         <option>None</option>
+                         <?php for($ic=0;$ic<$categoryCount;$ic++) { ?>
+                          <option><?=$categoryInfo[$ic]['ncategory'] ?></option>
+                        <?php } ?>
+                      </select>
+                     </div>
+                   </div>
+                   <div id="menu1" class="container tab-pane fade"><br>
+                      <input type="text" class="form-control" name="icategory" placeholder="Create Category">
+                   </div>
+               </div><br>
              <button type="submit" class="btn btn-primary" name="upload">Submit</button>
           </form>
        </div>
@@ -142,6 +269,7 @@ if(isset($_GET['delId'])){
 
  </table>
 </div>
+
 <script>
 function confirmDelete(textMessage)
 {
@@ -153,6 +281,18 @@ function confirmDelete(textMessage)
       //alert('members.php?delId='+textMessage);
      window.location.href = 'profile.php?delId='+textMessage
    }
+}
+function scategory(opt,cat)
+{
+
+     window.location.href = 'profile.php?oId='+opt+'&cId='+cat
+
+}
+function dcategory(cat)
+{
+
+     window.location.href = 'profile.php?dId='+cat
+
 }
 </script>
  <script>

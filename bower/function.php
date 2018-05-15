@@ -2,13 +2,16 @@
 require("unity.php");
 $uid = $_SESSION['uid'][0];
 $piid=$_GET['p'];
+$pactive="";
 $getSellerID=$_GET['getSellerID'];
 if(isset($_POST['upload'])){
     $iname = $_POST['iname'];
     $idetail = $_POST['idetail'];
     $iprice = $_POST['iprice'];
     $files = $_FILES['files'];
-    $iupload = $pt->pUpload($uid,$iname,$idetail,$iprice);
+    $istatus=$_POST['istatus'];
+    $icategory=$_POST['icategory'];
+    $iupload = $pt->pUpload($uid,$iname,$idetail,$iprice,$istatus,$icategory);
     if ($iupload == 0) {
       header("location:profile.php?msg=4");
     } else {
@@ -35,10 +38,12 @@ if(isset($_POST['update'])){
     $idetail = $_POST['idetail'];
     $iprice = $_POST['iprice'];
     $files = $_FILES['files'];
+    $istatus=$_POST['istatus'];
+    $icategory=$_POST['icategory'];
     $isend =2;
     $icheck = strlen($files['name'][0]);
 
-    $iupload = $pt->pUpdate($uid,$piid,$iname,$idetail,$iprice);
+    $iupload = $pt->pUpdate($uid,$piid,$iname,$idetail,$iprice,$istatus,$icategory);
     if($icheck != 0) {
         $isend = $it->isend($uid,$files);
     }

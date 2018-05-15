@@ -25,12 +25,15 @@ if (isset($_POST['login'])) {
 </head>
 <body>
   <nav class="navbar navbar-expand-md bg-dark navbar-dark">
-    <a class="navbar-brand" href="dashboard.php"><h4>Klauzm Store</h4></a>
+    <a class="navbar-brand" href="home.php"><h4>Klauzm Store</h4></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="collapsibleNavbar">
       <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="home.php">Home</a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" href="#">About Us</a>
         </li>

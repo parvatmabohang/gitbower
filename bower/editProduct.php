@@ -45,6 +45,63 @@ while ($piid == $product[$b]['id']){$b++;}
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
   <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+  <style>
+  .switch {
+position: relative;
+display: inline-block;
+width: 60px;
+height: 34px;
+}
+
+.switch input {display:none;}
+
+.slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #ccc;
+-webkit-transition: .4s;
+transition: .4s;
+}
+
+.slider:before {
+position: absolute;
+content: "";
+height: 26px;
+width: 26px;
+left: 4px;
+bottom: 4px;
+background-color: white;
+-webkit-transition: .4s;
+transition: .4s;
+}
+
+input:checked + .slider {
+background-color: #2196F3;
+}
+
+input:focus + .slider {
+box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+-webkit-transform: translateX(26px);
+-ms-transform: translateX(26px);
+transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+border-radius: 34px;
+}
+
+.slider.round:before {
+border-radius: 50%;
+}
+  </style>
 </head>
 <body>
   <nav class="navbar navbar-expand-md bg-dark navbar-dark">
@@ -119,6 +176,22 @@ while ($piid == $product[$b]['id']){$b++;}
              <label for="text">Upload Product pic: <i style="color:red;font-size:15px">(You can choose multiple images...)</i></label>
              <input type="file" class="form-control"  name="files[]" id="file" multiple>
            </div>
+           <div class="form-group">
+             <label for="text">Product Inactive or Active:</label><br>
+              <label class="switch"> <input type="hidden" name="istatus" value="off">
+                <?php if($product[0]['istatus'] =="off" ) {  ?> <input type="checkbox" name="istatus">
+                 <span class="slider round"></span> <?php } elseif($product[0]['istatus'] =="on") { ?><input type="checkbox" name="istatus" checked>  <span class="slider round"></span> <?php } else{}?>
+               </label></div>
+               <div class="form-group">
+               <label for="sel1">Category(select one):</label>
+                 <select class="form-control" id="sel1" name="icategory">
+                   <option>None</option>
+                    <option>Household Appliances</option>
+                    <option>Sports Items</option>
+                    <option>Books</option>
+                    <option>Vehicles</option>
+                    <option>Electrical Equipments</option>
+                </select>   </div>
             <button type="submit" class="btn btn-primary" name="update">Submit</button>
          </form>
       </div>

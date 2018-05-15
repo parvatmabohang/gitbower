@@ -2,20 +2,27 @@
 session_start();
 class Product
 {
-  function pUpload($iuid, $iname, $idetail, $iprice){
+  function pUpload($iuid, $iname, $idetail, $iprice,$istatus,$icategory){
      $conn = new Server;
+     $on ="on";
      $event = "Product Stored";
      $con = $conn->connect();
-     $usave = $con->prepare('INSERT INTO istore(uid,iname,idetail,iprice,event) VALUES (?,?,?,?,?)');
+     $usave = $con->prepare('INSERT INTO istore(uid,iname,idetail,iprice,event,istatus,icategory) VALUES (?,?,?,?,?,?,?)');
      $usave->bindParam(1, $iuid, PDO::PARAM_INT);
      $usave->bindParam(2, $iname, PDO::PARAM_STR,30);
      $usave->bindParam(3, $idetail, PDO::PARAM_STR,30);
      $usave->bindParam(4, $iprice, PDO::PARAM_INT);
      $usave->bindParam(5, $event, PDO::PARAM_STR,30);
+     $usave->bindParam(6, $istatus, PDO::PARAM_STR,5);
+     $usave->bindParam(7, $icategory, PDO::PARAM_STR,20);
      //$usave->bind_param('issis',$iuid, $iname,$idetail,$iprice,$event);
      $usave->execute();
      $last_id = $con->lastInsertId();
      //print_r($last_id);
+     $insertC = $con->prepare('INSERT INTO category(ncategory,scategory) VALUES (?,?)');
+     $insertC->bindParam(1 ,$icategory, PDO::PARAM_STR,30);
+     $insertC->bindParam(2, $on, PDO::PARAM_STR,30);
+     $insertC->execute();
      $update = $con->prepare('INSERT INTO iupdate(updateuid,updateuserid,updateiid,event) VALUES (?,?,?,?)');
      $update->bindParam(1, $iuid, PDO::PARAM_INT);
      $update->bindParam(2, $iuid, PDO::PARAM_INT);
@@ -24,25 +31,27 @@ class Product
      //$update->bind_param('iiis',$iuid,$iuid,$last_id,$event);
      $update->execute();
      //echo "New record created successfully. Last inserted ID is: " . $last_id;
-     if ($usave && $update) {
+     if ($usave && $update && $insertC) {
         return $last_id;
      } else {
         return 0;
      }
    }
-   function pUpdate($updateuid,$piid, $iname, $idetail, $iprice){
+   function pUpdate($updateuid,$piid, $iname, $idetail, $iprice,$istatus,$icategory){
       $time = date("hisa");
       $event = "Product Updated";
       $up= null;
       $conn = new Server;
       $con = $conn->connect();
-      $usave = $con->prepare('UPDATE istore set iname=?,idetail=?,iprice=?,event=?,updatedat = null where id=?');
+      $usave = $con->prepare('UPDATE istore set iname=?,idetail=?,iprice=?,event=?,istatus=?,icategory=?,updatedat = null where id=?');
       //$usave = $con->prepare('UPDATE istore set iname=?,idetail=?,iprice=? where id=?');
       $usave->bindParam(1, $iname, PDO::PARAM_STR,30);
       $usave->bindParam(2, $idetail, PDO::PARAM_STR,30);
       $usave->bindParam(3, $iprice, PDO::PARAM_INT);
       $usave->bindParam(4, $event, PDO::PARAM_STR,30);
-      $usave->bindParam(5, $piid, PDO::PARAM_INT);
+      $usave->bindParam(5, $istatus, PDO::PARAM_STR,5);
+      $usave->bindParam(6, $icategory, PDO::PARAM_STR,20);
+      $usave->bindParam(7, $piid, PDO::PARAM_INT);
       //$usave->bind_param('ssisi',$iname,$idetail,$iprice,$event,$piid);
       $usave->execute();
       $update = $con->prepare('INSERT INTO iupdate(updateuid,updateuserid,updateiid,event) VALUES (?,?,?,?)');
@@ -152,6 +161,36 @@ class Product
        return $harray;
 
        }
+       function getcProduct()
+       {
+         $conn = new Server;
+         $con = $conn->connect();
+         $getU = $con->prepare("SELECT istore.*,iimage.ipic,user.uname,category.* FROM istore INNER JOIN iimage ON istore.istatus='on' and istore.id=iimage.id LEFT JOIN user ON user.uid = istore.uid  INNER JOIN category ON istore.icategory = category.ncategory and category.scategory='on'  GROUP BY istore.id");
+         //$getU->bind_param('i',$uid);
+         $getU->execute();
+         $harray = [];
+         while ($roow =  $getU->fetch(PDO::FETCH_ASSOC)) {
+             $harray[] = $roow;
+         }
+         //print_r($harray);
+         return $harray;
+
+         }
+         function getcsProduct($cat)
+         {
+           $conn = new Server;
+           $con = $conn->connect();
+           $getU = $con->prepare("SELECT istore.*,iimage.ipic,user.uname,category.* FROM istore INNER JOIN iimage ON istore.istatus='on'and istore.icategory=? and istore.id=iimage.id LEFT JOIN user ON user.uid = istore.uid  INNER JOIN category ON istore.icategory = category.ncategory and category.scategory='on'  GROUP BY istore.id");
+           $getU->bindParam(1,$cat,PDO::PARAM_STR,50);
+           $getU->execute();
+           $harray = [];
+           while ($roow =  $getU->fetch(PDO::FETCH_ASSOC)) {
+               $harray[] = $roow;
+           }
+           //print_r($harray);
+           return $harray;
+
+           }
        function pdelete($iid){
           $conn=new Server;
           $con=$conn->connect();
@@ -178,6 +217,48 @@ class Product
              return false;
            }
          }
+         function cUpdate($ncategory,$scategory){
+            $conn = new Server;
+            $con = $conn->connect();
+            $usave = $con->prepare('UPDATE category set scategory=? where ncategory=?');
+            //$usave = $con->prepare('UPDATE istore set iname=?,idetail=?,iprice=? where id=?');
+            $usave->bindParam(1, $scategory, PDO::PARAM_STR,30);
+            $usave->bindParam(2, $ncategory, PDO::PARAM_STR,30);
+            //$usave->bind_param('ssisi',$iname,$idetail,$iprice,$event,$piid);
+            $usave->execute();
+            if ($usave) {
+               return 1;
+            } else {
+               return 0;
+            }
+          }
+          function cDelete($ncategory){
+            $conn=new Server;
+            $con=$conn->connect();
+            $stmt = $con->prepare('DELETE from category where ncategory=?');
+            $stmt->bindParam(1, $ncategory, PDO::PARAM_STR,30);
+            $stmt->execute();
+            $istmt = $con->prepare('DELETE from istore where icategory=?');
+            $istmt->bindParam(1, $ncategory, PDO::PARAM_STR,30);
+            $istmt->execute();
+            if($stmt && $istmt){
+              return true;
+            } else {
+              return false;
+            }
+          }
+          function categoryInfo(){
+            $conn=new Server;
+            $con=$conn->connect();
+            $stmt = $con->prepare('SELECT * FROM category');
+            $stmt->execute();
+            $harray = [];
+            while ($roow = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $harray[] = $roow;
+            }
+            //print_r($harray);
+            return $harray;
+          }
 }
 
 ?>
