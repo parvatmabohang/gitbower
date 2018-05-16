@@ -71,7 +71,7 @@ if(isset($_POST['update'])){
 }
 if(isset($_POST['ncat'])){
     $icategory = $_POST['icategory'];
-    $iupload = $ct->insertCat($icategory);
+    $iupload = $ct->insertCat($uid,$icategory);
     if ($iupload == 0) {
       header("location:profile.php?msg=5");
       //echo "Record Unsuccessfull!!!";
@@ -85,7 +85,7 @@ if(isset($_POST['editCat'])){
     $icategory = $_POST['icategory'];
     $catstatus = $_POST['istatus'];
     $cId = $_POST['cId'];
-    $iupload = $ct->cUpdate($cId,$icategory,$catstatus);
+    $iupload = $ct->cUpdate($cId,$uid,$icategory,$catstatus);
     if ($iupload) {
       header("location:categoryEdit.php?cId=$cId&msg=2");
       //echo "Record Unsuccessfull!!!";

@@ -2,23 +2,33 @@
 session_start();
 class Category
 {
-        function insertCat($icategory){
+        function insertCat($createdby,$icategory){
              $conn = new Server;
              $con = $conn->connect();
              $on ="on";
-             $insertC = $con->prepare('INSERT INTO category(ncategory,scategory) VALUES (?,?)');
-             $insertC->bindParam(1 ,$icategory, PDO::PARAM_STR,30);
-             $insertC->bindParam(2, $on, PDO::PARAM_STR,30);
+             $event = "Category Created";
+             $insertC = $con->prepare('INSERT INTO category(createdby,ncategory,scategory) VALUES (?,?,?)');
+             $insertC->bindParam(1 ,$createdby, PDO::PARAM_INT);
+             $insertC->bindParam(2 ,$icategory, PDO::PARAM_STR,30);
+             $insertC->bindParam(3, $on, PDO::PARAM_STR,30);
              $insertC->execute();
-             if ($insertC) {
+             $last_id = $con->lastInsertId();
+             $update = $con->prepare('INSERT INTO catupdate(updateuserid,updatecid,event) VALUES (?,?,?)');
+             $update->bindParam(1, $createdby, PDO::PARAM_INT);
+             $update->bindParam(2, $last_id, PDO::PARAM_INT);
+             $update->bindParam(3, $event, PDO::PARAM_STR,30);
+             //$update->bind_param('iiis',$iuid,$iuid,$last_id,$event);
+             $update->execute();
+             if ($insertC && $update) {
                  return 1;
              } else {
                  return 0;
              }
          }
-         function cUpdate($cId,$ncategory,$scategory){
+         function cUpdate($cId,$ucid,$ncategory,$scategory){
             $conn = new Server;
             $con = $conn->connect();
+            $event = "Category Updated";
             $usave = $con->prepare('UPDATE category set ncategory=?,scategory=? where cid=?');
             //$usave = $con->prepare('UPDATE istore set iname=?,idetail=?,iprice=? where id=?');
             $usave->bindParam(1, $ncategory, PDO::PARAM_STR,30);
@@ -26,15 +36,22 @@ class Category
             $usave->bindParam(3, $cId, PDO::PARAM_INT);
             //$usave->bind_param('ssisi',$iname,$idetail,$iprice,$event,$piid);
             $usave->execute();
-            if ($usave) {
+            $update = $con->prepare('INSERT INTO catupdate(updateuserid,updatecid,event) VALUES (?,?,?)');
+            $update->bindParam(1, $ucid, PDO::PARAM_INT);
+            $update->bindParam(2, $cId, PDO::PARAM_INT);
+            $update->bindParam(3, $event, PDO::PARAM_STR,30);
+            //$update->bind_param('iiis',$iuid,$iuid,$last_id,$event);
+            $update->execute();
+            if ($usave && $update) {
                return true;
             } else {
                return false;
             }
           }
-          function cDelete($dId){
+          function cDelete($ucid,$dId){
             $conn=new Server;
             $con=$conn->connect();
+            $event = "Category Deleted";
             $stmt = $con->prepare('DELETE from category where cid=?');
             $stmt->bindParam(1, $dId, PDO::PARAM_INT);
             $stmt->execute();

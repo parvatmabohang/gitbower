@@ -5,7 +5,7 @@ $uidname = $_SESSION['uid'][1];
 $uidemail = $_SESSION['uid'][2];
 if(isset($_GET['dId'])){
 $dId=$_GET['dId'];
-$dId=$ct->cDelete($dId);
+$dId=$ct->cDelete($uid,$dId);
 if($dId){
   echo "Category Deleted";
 } else {
