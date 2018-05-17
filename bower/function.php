@@ -1,6 +1,12 @@
 <?php
 require("unity.php");
 $uid = $_SESSION['uid'][0];
+$uidemail = $_SESSION['uid'][2];
+$idmail = "";
+$uidmail="";
+$piid = "";
+$idmail=$_GET['idmail'];
+$uidmail = $_GET['uidmail'];
 $piid=$_GET['p'];
 $pactive="";
 $getSellerID=$_GET['getSellerID'];
@@ -94,5 +100,30 @@ if(isset($_POST['editCat'])){
 
     }
 
+}
+if (isset($_POST['sendmail'])) {
+    $pid = $_POST['pid'];
+    $pemail = $_POST['pemail'];
+    $re=$ret->call($uidemail,$pemail,$pid);
+    if ($re) {
+        header("location:info.php?p=$idmail&q=$uidmail&msg=1");
+    } else {
+        header("location:info.php?p=$idmail&q=$uidmail&msg=2");
+    }
+}
+if (isset($_POST['g-recaptcha-response']) && $_POST['g-recaptcha-response'] ) {
+    //var_dump($_POST);
+    $reqemail = $_POST['semail'];
+    $rese = $_POST['ssemail'];
+    $reqiid = $_POST['pid'];
+    $ret = $et->insertReq($reqemail,$rese,$reqiid);
+    if ($ret) {
+        header("location:homeinfo.php?p=$idmail&q=$uidmail&msg=1");
+    } else {
+        header("location:homeinfo.php?p=$idmail&q=$uidmail&msg=2");
+    }
+    //$arr = json_decode($rsp,TRUE);
+} else {
+        header("location:homeinfo.php?p=$idmail&q=$uidmail&msg=3");
 }
 ?>

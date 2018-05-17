@@ -127,7 +127,7 @@ class Product
        {
            $conn = new Server;
            $con = $conn->connect();
-           $getU = $con->prepare("SELECT istore.*,iimage.pid,iimage.ipic FROM istore LEFT JOIN iimage ON istore.uid = ? and istore.id = ? and istore.id=iimage.id order by istore.id = ? desc");
+           $getU = $con->prepare("SELECT istore.*,iimage.pid,iimage.ipic,user.uemail FROM istore LEFT JOIN iimage ON istore.uid = ? and istore.id = ? and istore.id=iimage.id LEFT JOIN user ON user.uid = istore.uid order by istore.id = ? desc");
            $getU->bindParam(1, $puid, PDO::PARAM_INT);
            $getU->bindParam(2, $piid, PDO::PARAM_INT);
            $getU->bindParam(3, $piid, PDO::PARAM_INT);

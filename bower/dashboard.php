@@ -22,6 +22,8 @@ if($dId){
   echo "Unsuccessfull";
 }
 }
+$getReq=$et->getReq($uid);
+$countgetReq=count($getReq);
 $categoryInfo=$ct->categoryInfo();
 $categoryCount=count($categoryInfo);
 ?>
@@ -79,6 +81,18 @@ $categoryCount=count($categoryInfo);
               </ul>
           </div>
         </li>
+        <li class="nav-item">
+        <div class="btn-group">
+           <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" style="border:0px;color:white;">Requests
+           </button>
+           <div class="dropdown-menu">
+             <?php for ($i = 0;$i<$countgetReq;$i++) { ?>
+              <a class="dropdown-item" href="#"><span style="color:red;"><?=$getReq[$i]['requestuid'] ?></span> requested you for product <span style="color:red;"><?=$getReq[$i]['reqiid'] ?></span></a>
+              <div class="dropdown-divider"></div>
+            <?php } ?>
+           </div>
+       </div>
+     </li>
       </ul>
     </div>
   </nav><br>
