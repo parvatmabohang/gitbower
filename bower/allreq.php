@@ -18,6 +18,8 @@ if($_GET['msg']==2) {
 } elseif($_GET['msg']==1) {
   echo "Unsuccessfull";
 } else { }
+$getReq=$et->getallReq($uid);
+$countgetReq=count($getReq);
 $categoryInfo=$ct->categoryInfo();
 $categoryCount=count($categoryInfo);
 $categorysInfo=$ct->categorysInfo($cId);
@@ -137,7 +139,7 @@ border-radius: 50%;
      <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
          <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
-       <li class="breadcrumb-item active" aria-current="page">Categoryedit</li>
+       <li class="breadcrumb-item active" aria-current="page">All Request</li>
       </ol>
      </nav>
    </div>
@@ -146,26 +148,16 @@ border-radius: 50%;
 
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">Upate Product Category:-</h4>
+          <h4 class="modal-title">All Requests:-</h4>
         </div>
 
         <!-- Modal body -->
         <div class="modal-body">
-          <form method="post" action="function.php?cId=<?=$cId?>" enctype="multipart/form-data" id="ushobby" >
-            <div class="form-group">
-              <label for="text">New Category Name:</label>
-              <input type="text" class="form-control" name="icategory" value="<?=$categorysInfo['ncategory']?>" required>
-            </div><input type="hidden" name="cId" value="<?=$categorysInfo['cid']?>">
-            <div class="form-group">
-              <label for="text">Category Active or Inactive:</label><br>
-               <label class="switch"> <input type="hidden" name="istatus" value="off">
-                 <?php if($categorysInfo['scategory'] =="off" ) {  ?> <input type="checkbox" name="istatus">
-                  <span class="slider round"></span> <?php } elseif($categorysInfo['scategory'] =="on") { ?><input type="checkbox" name="istatus" checked>  <span class="slider round"></span> <?php } else{}?>
-                </label></div>
-              <button type="submit" class="btn btn-primary" name="editCat">Submit</button>
-           </form>
-           <hr>
-             <button type="submit" class="btn btn-primary"  onclick="dcategory('<?=$categorysInfo['cid']?>','<?= $categorysInfo['cid']?>')" name="deleteCat">Delete Category</button>
+          <?php for ($i = 0;$i<$countgetReq;$i++) { ?>
+           <a class="dropdown-item" href="#"><span style="color:red;"><?=$getReq[$i]['requestuid'] ?></span> requested you for product <span style="color:red;"><?=$getReq[$i]['reqiid'] ?></span></a>
+           <div class="dropdown-divider"></div>
+         <?php } ?>
+
         </div>
 
       </div>

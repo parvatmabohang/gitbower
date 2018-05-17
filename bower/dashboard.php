@@ -90,12 +90,22 @@ $categoryCount=count($categoryInfo);
               <a class="dropdown-item" href="#"><span style="color:red;"><?=$getReq[$i]['requestuid'] ?></span> requested you for product <span style="color:red;"><?=$getReq[$i]['reqiid'] ?></span></a>
               <div class="dropdown-divider"></div>
             <?php } ?>
+             <a class="dropdown-item" style="color:red;padding-left:160px;" href="allreq.php">See all </a>
            </div>
        </div>
      </li>
       </ul>
     </div>
-  </nav><br>
+  </nav>
+  <br>
+  <div class="container">
+     <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+       <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+      </ol>
+     </nav>
+   </div>
+  <br>
 <div class="container">
 <table id="toop" class="table table-bordered">
    <thead>

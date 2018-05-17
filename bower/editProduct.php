@@ -31,6 +31,8 @@ if(isset($_GET['pId'])){
 $product = $pt->getsProduct($getSellerID,$piid);
 $b=0;
 while ($piid == $product[$b]['id']){$b++;}
+$categoryInfo=$ct->categoryInfo();
+$categoryCount=count($categoryInfo);
 ?>
 <html>
 <head>
@@ -126,7 +128,15 @@ border-radius: 50%;
         </li>
       </ul>
     </div>
-  </nav><br>
+  </nav>  <br>
+    <div class="container">
+       <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+           <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
+         <li class="breadcrumb-item active" aria-current="page">Editproduct</li>
+        </ol>
+       </nav>
+     </div><br>
   <div class="container">
   Name:-  <a href="profile.php" style="color:red;"> <?=$uidname ?></a> <br>
   Email:-  <?=$uidemail ?>
@@ -184,13 +194,12 @@ border-radius: 50%;
                </label></div>
                <div class="form-group">
                <label for="sel1">Category(select one):</label>
-                 <select class="form-control" id="sel1" name="icategory">
+                 <select class="form-control" id="sel1"  name="icategory">
+                   <option><?=$product[0]['ncategory']?></option>
                    <option>None</option>
-                    <option>Household Appliances</option>
-                    <option>Sports Items</option>
-                    <option>Books</option>
-                    <option>Vehicles</option>
-                    <option>Electrical Equipments</option>
+                   <?php for($ic=0;$ic<$categoryCount;$ic++) { ?>
+                    <option value="<?=$categoryInfo[$ic]['cid'] ?>"><?=$categoryInfo[$ic]['ncategory'] ?></option>
+                  <?php } ?>
                 </select>   </div>
             <button type="submit" class="btn btn-primary" name="update">Submit</button>
          </form>

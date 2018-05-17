@@ -127,7 +127,7 @@ class Product
        {
            $conn = new Server;
            $con = $conn->connect();
-           $getU = $con->prepare("SELECT istore.*,iimage.pid,iimage.ipic,user.uemail FROM istore LEFT JOIN iimage ON istore.uid = ? and istore.id = ? and istore.id=iimage.id LEFT JOIN user ON user.uid = istore.uid order by istore.id = ? desc");
+           $getU = $con->prepare("SELECT istore.*,iimage.pid,iimage.ipic,user.uemail,category.ncategory FROM istore LEFT JOIN iimage ON istore.uid = ? and istore.id = ? and istore.id=iimage.id LEFT JOIN user ON user.uid = istore.uid LEFT JOIN category ON category.cid=istore.icategory order by istore.id = ? desc");
            $getU->bindParam(1, $puid, PDO::PARAM_INT);
            $getU->bindParam(2, $piid, PDO::PARAM_INT);
            $getU->bindParam(3, $piid, PDO::PARAM_INT);
@@ -141,6 +141,24 @@ class Product
            return $harray;
 
          }
+         function getsoProduct($puid,$piid)
+         {
+             $conn = new Server;
+             $con = $conn->connect();
+             $getU = $con->prepare("SELECT istore.*,iimage.pid,iimage.ipic,user.uemail FROM istore INNER JOIN iimage ON istore.uid = ? and istore.istatus='on' and istore.id = ? and istore.id=iimage.id INNER JOIN category ON istore.icategory = category.cid and category.scategory='on' LEFT JOIN user ON user.uid = istore.uid order by istore.id = ? desc");
+             $getU->bindParam(1, $puid, PDO::PARAM_INT);
+             $getU->bindParam(2, $piid, PDO::PARAM_INT);
+             $getU->bindParam(3, $piid, PDO::PARAM_INT);
+             //$getU->bind_param('iii',$puid,$piid,$piid);
+             $getU->execute();
+             $harray = [];
+             while ($roow = $getU->fetch(PDO::FETCH_ASSOC)) {
+                 $harray[] = $roow;
+             }
+             //print_r($harray);
+             return $harray;
+
+           }
 
      function getProduct($uid)
      {

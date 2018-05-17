@@ -20,7 +20,7 @@ if (isset($_POST['login'])) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="/bower/bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <script src="/bower/bower_components/jquery/distjquery.min.js"></script>
+  <script src="/bower/bower_components/jquery/dist/jquery.min.js"></script>
   <script src="/bower/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 </head>
 <body>
@@ -39,8 +39,15 @@ if (isset($_POST['login'])) {
         </li>
       </ul>
     </div>
-  </nav><br>
-
+  </nav>
+  <br>
+  <div class="container">
+     <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+       <li class="breadcrumb-item active" aria-current="page">Login</li>
+      </ol>
+     </nav>
+   </div><br>
 <div class="container">
   <h2>Klauzm Store</h2>
   <form method="post" action="login.php">

@@ -91,12 +91,12 @@ if(isset($_POST['editCat'])){
     $icategory = $_POST['icategory'];
     $catstatus = $_POST['istatus'];
     $cId = $_POST['cId'];
-    $iupload = $ct->cUpdate($cId,$uid,$icategory,$catstatus);
-    if ($iupload) {
+    $iuploads = $ct->cUpdate($cId,$uid,$icategory,$catstatus);
+    if ($iuploads == true) {
       header("location:categoryEdit.php?cId=$cId&msg=2");
       //echo "Record Unsuccessfull!!!";
     } else {
-      header("location:categoryInfo.php?cId=$cId&msg=1");
+      header("location:categoryEdit.php?cId=$cId&msg=1");
 
     }
 
@@ -114,16 +114,13 @@ if (isset($_POST['sendmail'])) {
 if (isset($_POST['g-recaptcha-response']) && $_POST['g-recaptcha-response'] ) {
     //var_dump($_POST);
     $reqemail = $_POST['semail'];
-    $rese = $_POST['ssemail'];
     $reqiid = $_POST['pid'];
-    $ret = $et->insertReq($reqemail,$rese,$reqiid);
+    $ret = $et->insertReq($reqemail,$reqiid);
     if ($ret) {
         header("location:homeinfo.php?p=$idmail&q=$uidmail&msg=1");
     } else {
         header("location:homeinfo.php?p=$idmail&q=$uidmail&msg=2");
     }
     //$arr = json_decode($rsp,TRUE);
-} else {
-        header("location:homeinfo.php?p=$idmail&q=$uidmail&msg=3");
 }
 ?>

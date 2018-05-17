@@ -52,7 +52,17 @@ $categoryCount=count($categoryInfo);
         </li>
       </ul>
     </div>
-  </nav><br>
+  </nav>
+  <br>
+  <div class="container">
+     <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+       <li class="breadcrumb-item"><a href="login.php">Login</a></li>
+       <li class="breadcrumb-item"><a href="home.php">Home</a></li>
+       <li class="breadcrumb-item active" aria-current="page">Category</li>
+      </ol>
+     </nav>
+   </div><br>
 <div class="container">
 <table id="toop" class="table table-bordered">
    <thead>

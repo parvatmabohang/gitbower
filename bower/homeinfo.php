@@ -16,7 +16,7 @@ if ($ty == 2) {
   echo "Not Verified";
 } else {
 }
-$product = $pt->getsProduct($puid,$piid);
+$product = $pt->getsoProduct($puid,$piid);
 $b=0;
 while ($piid == $product[$b]['id']){$b++;}
 ?>
@@ -54,7 +54,17 @@ while ($piid == $product[$b]['id']){$b++;}
         </li>
       </ul>
     </div>
-  </nav><br>
+  </nav>
+  <br>
+  <div class="container">
+     <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+       <li class="breadcrumb-item"><a href="login.php">Login</a></li>
+       <li class="breadcrumb-item"><a href="home.php">Home</a></li>
+       <li class="breadcrumb-item active" aria-current="page">Homeinfo</li>
+      </ol>
+     </nav>
+   </div><br>
 <div class="container">
   <u><h5>Product Details  <span style="font-size:15px;">(Product ID:- <i style="color:red;font-size:15px;"><?= $product[0]['id'] ?></i>) </span></h5></u>
 
@@ -108,13 +118,12 @@ while ($piid == $product[$b]['id']){$b++;}
                 <label for="text">Email:</label>
                 <input placeholder="Enter Email" type="text" class="form-control" name="semail" required>
               </div>
-              <input type="hidden" value="<?= $product[0]['uid'] ?>" name="ssemail">
               <input type="hidden" value="<?= $product[0]['id'] ?>" name="pid">
               <div class="g-recaptcha" data-sitekey="6LcYg1kUAAAAAGAsJqOx3UXogIjk4mWYaCyZg5XK"></div>
                <br>
                 <button type="submit" class="btn btn-primary" name="sendM">Submit</button>
              </form>
-             <?= $product[0]['uemail'] ?>
+
           </div>
 
         </div>

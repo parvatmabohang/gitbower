@@ -165,6 +165,15 @@ border-radius: 50%;
       </ul>
     </div>
   </nav>
+  <br>
+  <div class="container">
+     <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
+       <li class="breadcrumb-item active" aria-current="page">Profile</li>
+      </ol>
+     </nav>
+   </div>
   <!-- The Modal -->
   <div class="modal fade" id="myCat">
     <div class="modal-dialog modal-lg">

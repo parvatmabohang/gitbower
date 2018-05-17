@@ -57,7 +57,16 @@ while ($piid == $product[$b]['id']){$b++;}
         </li>
       </ul>
     </div>
-  </nav><br>
+  </nav>
+  <br>
+  <div class="container">
+     <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
+       <li class="breadcrumb-item active" aria-current="page">Info</li>
+      </ol>
+     </nav>
+   </div><br>
   <div class="container">
   Name:-  <a href="profile.php" style="color:red;"> <?=$uidname ?></a> <br>
   Email:-  <?=$uidemail ?>
