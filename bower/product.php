@@ -33,7 +33,9 @@ class Product
         return 0;
      }
    }
-   function pUpdate($updateuid,$piid, $iname, $idetail, $iprice,$istatus,$icategory){
+   function pUpdate($updateuid,$piid, $iname, $idetail, $iprice,$istatus,$icategory,$aid1,$iattribute1,$iinfo1){
+      $caid1= count($aid1);
+      //print_r($iinfo1);
       $time = date("hisa");
       $event = "Product Updated";
       $up= null;
@@ -50,6 +52,16 @@ class Product
       $usave->bindParam(7, $piid, PDO::PARAM_INT);
       //$usave->bind_param('ssisi',$iname,$idetail,$iprice,$event,$piid);
       $usave->execute();
+      $aupdate = $con->prepare('UPDATE attribute set iattribute=?,iinfo=? where aid=?');
+      for ($g = 0; $g < $caid1;$g++)
+      {
+         $aupdate->bindParam(1, $iattribute1[$g], PDO::PARAM_STR,30);
+         $aupdate->bindParam(2, $iinfo1[$g], PDO::PARAM_STR,30);
+         $aupdate->bindParam(3, $aid1[$g], PDO::PARAM_INT);
+         //$ui->bind_param("is",$iid,$iimage[$g]);
+         //echo $iimage[$g];
+         $aupdate->execute();
+      }
       $update = $con->prepare('INSERT INTO iupdate(updateuid,updateuserid,updateiid,event) VALUES (?,?,?,?)');
       $update->bindParam(1, $updateuid, PDO::PARAM_INT);
       $update->bindParam(2, $updateuid, PDO::PARAM_INT);
@@ -59,7 +71,7 @@ class Product
       $update->execute();
       //$last_id = $usave->insert_id;
       //echo "New record created successfully. Last inserted ID is: " . $last_id;
-      if ($usave && $update) {
+      if ($usave && $update && $aupdate) {
          return 1;
       } else {
          return 0;
@@ -127,7 +139,7 @@ class Product
        {
            $conn = new Server;
            $con = $conn->connect();
-           $getU = $con->prepare("SELECT istore.*,iimage.pid,iimage.ipic,user.uemail,category.ncategory FROM istore LEFT JOIN iimage ON istore.uid = ? and istore.id = ? and istore.id=iimage.id LEFT JOIN user ON user.uid = istore.uid LEFT JOIN category ON category.cid=istore.icategory order by istore.id = ? desc");
+           $getU = $con->prepare("SELECT istore.*,iimage.pid,iimage.ipic,user.uemail,category.* FROM istore LEFT JOIN iimage ON istore.uid = ? and istore.id = ? and istore.id=iimage.id LEFT JOIN user ON user.uid = istore.uid LEFT JOIN category ON category.cid=istore.icategory order by istore.id = ? desc");
            $getU->bindParam(1, $puid, PDO::PARAM_INT);
            $getU->bindParam(2, $piid, PDO::PARAM_INT);
            $getU->bindParam(3, $piid, PDO::PARAM_INT);
@@ -145,10 +157,9 @@ class Product
          {
              $conn = new Server;
              $con = $conn->connect();
-             $getU = $con->prepare("SELECT istore.*,iimage.pid,iimage.ipic,user.uemail FROM istore INNER JOIN iimage ON istore.uid = ? and istore.istatus='on' and istore.id = ? and istore.id=iimage.id INNER JOIN category ON istore.icategory = category.cid and category.scategory='on' LEFT JOIN user ON user.uid = istore.uid order by istore.id = ? desc");
+             $getU = $con->prepare("SELECT istore.*,iimage.pid,iimage.ipic,user.uemail,attribute.* FROM istore INNER JOIN iimage ON istore.uid = ? and istore.istatus='on' and istore.id = ? and istore.id=iimage.id INNER JOIN category ON istore.icategory = category.cid and category.scategory='on' LEFT JOIN user ON user.uid = istore.uid LEFT JOIN attribute ON istore.id=attribute.iid order by attribute.aid ASC");
              $getU->bindParam(1, $puid, PDO::PARAM_INT);
              $getU->bindParam(2, $piid, PDO::PARAM_INT);
-             $getU->bindParam(3, $piid, PDO::PARAM_INT);
              //$getU->bind_param('iii',$puid,$piid,$piid);
              $getU->execute();
              $harray = [];
@@ -231,6 +242,40 @@ class Product
              return false;
            }
          }
+         function addSpec($pid,$iattribute1,$iinfo1){
+            $attrcount= count($iattribute1);
+            $conn = new Server;
+            $con = $conn->connect();
+            $usave = $con->prepare('INSERT INTO attribute(iid,iattribute,iinfo) VALUES (?,?,?)');
+            for ($g = 0; $g < $attrcount;$g++) {
+                 $usave->bindParam(1,$pid,PDO::PARAM_INT);
+                 $usave->bindParam(2,$iattribute1[$g],PDO::PARAM_STR,30);
+                 $usave->bindParam(3,$iinfo1[$g],PDO::PARAM_STR,30);
+                 $usave->execute();
+             }
+            //$usave->bind_param('issis',$iuid, $iname,$idetail,$iprice,$event);
+            //$last_id = $con->lastInsertId();
+            if ($usave) {
+               return true;
+            } else {
+               return false;
+            }
+          }
+          function getSpec($iid)
+          {
+            $conn = new Server;
+            $con = $conn->connect();
+            $getU = $con->prepare("SELECT attribute.* FROM attribute INNER JOIN istore ON istore.id=?  and istore.id=attribute.iid");
+            $getU->bindParam(1,$iid,PDO::PARAM_INT);
+            $getU->execute();
+            $harray = [];
+            while ($roow =  $getU->fetch(PDO::FETCH_ASSOC)) {
+                $harray[] = $roow;
+            }
+            //print_r($harray);
+            return $harray;
+
+            }
 }
 
 ?>

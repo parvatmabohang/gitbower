@@ -3,26 +3,14 @@ require("unity.php");
 $uid = $_SESSION['uid'][0];
 $uidname = $_SESSION['uid'][1];
 $uidemail = $_SESSION['uid'][2];
-if(isset($_GET['dId'])){
-$dId=$_GET['dId'];
-$dId=$ct->cDelete($uid,$dId);
-if($dId){
-  echo "Category Deleted";
-} else {
-  echo "Unsuccessfull";
-}
-}
-$cId = $_GET['cId'];
+$piid=$_GET['p'];
 if($_GET['msg']==2) {
-  echo "Category Updated";
+  echo "Specification adding failed";
 } elseif($_GET['msg']==1) {
-  echo "Unsuccessfull";
+  echo "Specification Added Successfully";
 } else { }
-$getReq=$et->getallReq($uid);
-$countgetReq=count($getReq);
 $categoryInfo=$ct->categoryInfo();
 $categoryCount=count($categoryInfo);
-//$categorysInfo=$ct->categorysInfo($cId);
 ?>
 <html>
 <head>
@@ -35,6 +23,28 @@ $categoryCount=count($categoryInfo);
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
   <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+  <script>
+$(document).ready(function(){
+   var kl = [];
+   var j = 0;
+   var k=0;
+   $("#mhobby").click(function(){
+       $("<input class='form-control' placeholder='Product Attribute' type='text' id='uhobby1' name="+j+" required>").appendTo("#mihobby");
+       $("<input class='form-control' placeholder='Product Information' type='text' id='uhobby2' name=a"+j+" required>").appendTo("#mihobbyy");
+         var klp=$("input[name="+j+"]").attr("name");
+         //$("input[name="+j+"]").attr("value",klp);
+        // $("input[name=a"+j+"]").attr("value",klp);
+
+         //alert(klp);
+     //  $(".j").attr("value",j);
+       //  $("#"+kl).attr("value",j);
+       //  $("input[name="+kl[j]+"]").attr("value",j);
+       //$("input[name="+kl[j]+"]").attr("name",kl[1]);
+       j++;
+       $("#click_count").attr('value',j);
+   });
+});
+</script>
   <style>
   .switch {
 position: relative;
@@ -139,7 +149,7 @@ border-radius: 50%;
      <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
          <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
-       <li class="breadcrumb-item active" aria-current="page">All Request</li>
+       <li class="breadcrumb-item active" aria-current="page">Add Product Specification</li>
       </ol>
      </nav>
    </div>
@@ -148,67 +158,40 @@ border-radius: 50%;
 
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">All Requests:-</h4>
+          <h4 class="modal-title"> Product Specification:-</h4>
+                    <button id="mhobby" type="button" data-dismiss="modal">Add More<i class="fa fa-plus-square" style="font-size:20px;color:red"></i></button>
         </div>
 
         <!-- Modal body -->
         <div class="modal-body">
-          <?php for ($i = 0;$i<$countgetReq;$i++) { ?>
-           <a class="dropdown-item" href="#"><span style="color:red;"><?=$getReq[$i]['requestuid'] ?></span> requested you for product-ID <span style="color:red;"><?=$getReq[$i]['reqiid'] ?></span></a>
-           <div class="dropdown-divider"></div>
-         <?php } ?>
+          <form  method="post" action="function.php"  id="ushobby" >
+            <div class="form-group">  <div class="row">
+                <div class="col-sm-4">
+              <label for="text"><h5>Product Attributes:-</h5></label>
+            </div>  <div class="col-sm-4">
+              <label for="text"><h5>Product Information</h5></label>
+            </div></div></div><input type="hidden" name="click" id="click_count">
+            <input type="hidden" value="<?=$piid ?>" name="p" id="click_count">
 
+            <div class="form-group">  <div class="row">
+                <div class="col-sm-4">
+              <input placeholder="Product Attributes" type="text" class="form-control" name="iattribute" required>
+            </div>  <div class="col-sm-4">
+                <input placeholder="Product Information" type="text" class="form-control" name="iinfo"  required>
+            </div></div></div>
+
+            <div class="form-group">  <div class="row">
+                <div class="col-sm-4">
+               <span id="mihobby" ></span>
+            </div>  <div class="col-sm-4">
+                <span id="mihobbyy" ></span>
+            </div></div></div>
+
+              <button type="submit" class="btn btn-primary" name="addSpec">Submit</button>
+           </form>
         </div>
 
       </div>
     </div>
-    <div class="container">
-    <table id="toop" class="table table-bordered">
-       <thead>
-         <tr>
-           <th>Requested Product-ID</th>
-           <th>Request ID</th>
-           <th>Requester Name</th>
-           <th>Requester Email</th>
-           <th>Requester Contact No.</th>
-           <th>Requester Comment</th>
-           <th>Requested Product Image</th>
-           <th>Requested Product Name</th>
-           <th>Requested Product Detail</th>
-           <th>Requested Product Price</th>
-        </tr>
-       </thead>
-       <tbody>
-         <?php
-            for ($i = 0;$i<$countgetReq;$i++) { ?>
-         <tr><?php if($getReq[$i]['reqid']==$getReq[$i-1]['reqid']){  } else { ?>
-           <td><?= $getReq[$i]['id']?></td>
-           <td><?= $getReq[$i]['reqid']?></td>
-           <td><?= $getReq[$i]['requestuname']?></td>
-           <td><?= $getReq[$i]['requestuid']?></td>
-           <td><?= $getReq[$i]['requestcontact']?></td>
-           <td><?= $getReq[$i]['requestucomment']?></td>
-           <td><img src="<?= $getReq[$i]['ipic'] ?>" height="92" width="92"></td>
-           <td><?= $getReq[$i]['iname']?></td>
-           <td><?= $getReq[$i]['idetail']?></td>
-           <td><?= $getReq[$i]['iprice']?></td>
-         </tr>
-       <?php } } ?>
-       </tbody>
-     </table>
-    </div>
-    <script>
-    function dcategory(icat,cat)
-    {
-
-         window.location.href = 'categoryEdit.php?dId='+icat+'&cId='+cat
-
-    }
-    </script>
-    <script>
-    $(document).ready( function () {
-        $('#toop').DataTable();
-    });
-    </script>
 </body>
 </html>

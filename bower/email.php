@@ -3,15 +3,16 @@
 session_start();
 class Email
 {
-   function insertReq($reqemail,$reqname,$reqcomment,$reqiid)
+   function insertReq($reqemail,$reqname,$reqcomment,$reqcontact,$reqiid)
    {
      $conn = new Server;
      $con = $conn->connect();
-     $usave = $con->prepare('INSERT INTO request(requestuid,requestuname,requestucomment,reqiid) VALUES (?,?,?,?)');
+     $usave = $con->prepare('INSERT INTO request(requestuid,requestuname,requestucomment,requestcontact,reqiid) VALUES (?,?,?,?,?)');
      $usave->bindParam(1, $reqemail, PDO::PARAM_STR,30);
      $usave->bindParam(2, $reqname, PDO::PARAM_STR,30);
      $usave->bindParam(3, $reqcomment, PDO::PARAM_STR,30);
-     $usave->bindParam(4, $reqiid, PDO::PARAM_INT);
+     $usave->bindParam(4, $reqcontact, PDO::PARAM_INT);
+     $usave->bindParam(5, $reqiid, PDO::PARAM_INT);
      $usave->execute();
      if ($usave) {
         return true;

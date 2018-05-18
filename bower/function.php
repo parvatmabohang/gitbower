@@ -42,6 +42,15 @@ if(isset($_POST['upload'])){
     }
 }
 if(isset($_POST['update'])){
+    $naid = $_POST['naid'];
+    $aid1=[];
+    $iattribute1=[];
+    $iinfo1=[];
+    for ($i=0;$i<$naid;$i++) {
+      $aid1[$i]=$_POST["aid$i"];
+      $iattribute1[$i]=$_POST["iattribute$i"];
+      $iinfo1[$i]=$_POST["iinfo$i"];
+    }
     $iname = $_POST['iname'];
     $idetail = $_POST['idetail'];
     $iprice = $_POST['iprice'];
@@ -51,7 +60,7 @@ if(isset($_POST['update'])){
     $isend =2;
     $icheck = strlen($files['name'][0]);
 
-    $iupload = $pt->pUpdate($uid,$piid,$iname,$idetail,$iprice,$istatus,$icategory);
+    $iupload = $pt->pUpdate($uid,$piid,$iname,$idetail,$iprice,$istatus,$icategory,$aid1,$iattribute1,$iinfo1);
     if($icheck != 0) {
         $isend = $it->isend($uid,$files);
     }
@@ -113,13 +122,35 @@ if (isset($_POST['sendmail'])) {
         header("location:info.php?p=$idmail&q=$uidmail&msg=2");
     }
 }
+if (isset($_POST['addSpec'])) {
+    $iattribute1 = [];
+    $iinfo1 = [];
+    $pid = $_POST['p'];
+    $iattribute = $_POST['iattribute'];
+    $iinfo = $_POST['iinfo'];
+    $click_count=$_POST['click'];
+    for ($j=0;$j<$click_count;$j++) {
+       $iattribute1[$j]=$_POST[$j];
+       $iinfo1[$j]=$_POST["a$j"];
+    }
+    $iattribute1[] = $iattribute;
+    $iinfo1[] = $iinfo;
+    $re=$pt->addSpec($pid,$iattribute1,$iinfo1);
+    if ($re) {
+        header("location:addspecification.php?p=$pid&msg=1");
+    } else {
+        header("location:addspecification.php?p=$pid&msg=2");
+    }
+}
 if (isset($_POST['g-recaptcha-response']) && $_POST['g-recaptcha-response'] ) {
     //var_dump($_POST);
     $reqemail = $_POST['semail'];
     $reqname = $_POST['sname'];
     $reqcomment = $_POST['scomment'];
+    $reqcontact = $_POST['scontact'];
     $reqiid = $_POST['pid'];
-    $ret = $et->insertReq($reqemail,$reqname,$reqcomment,$reqiid);
+    $cat = $_POST['pcat'];
+    $ret = $et->insertReq($reqemail,$reqname,$reqcomment,$reqcontact,$reqiid);
     if ($ret) {
         header("location:homeinfo.php?cat=$cat&p=$idmail&q=$uidmail&msg=1");
     } else {

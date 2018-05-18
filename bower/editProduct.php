@@ -28,6 +28,8 @@ if(isset($_GET['pId'])){
   else{echo "Unsuccessfull";}
 }
 //$suser = $rt->getUser($uid);
+$getSpec = $pt->getSpec($piid);
+$countSpec = count($getSpec);
 $product = $pt->getsProduct($getSellerID,$piid);
 $b=0;
 while ($piid == $product[$b]['id']){$b++;}
@@ -148,12 +150,12 @@ border-radius: 50%;
 </div>
 <div class="container" style="margin-top:30px">
   <div class="row">
-    <div class="col-sm-4">
+    <div class="col-sm-6">
       <p>Item Images:</p>
       <div class="container">
         <div class="row">
         <?php for ($f = 0;$f <=$b-1; $f++ ) {  ?>
-          <div class="col-md-5">
+          <div class="col-md-4">
             <?php $tcount = strlen($product[0]['ipic']); if($tcount !=0){?>
             <div class="thumbnail">
             <a href="#" onclick="confirmDelete(<?php echo $product[$f]['pid']; ?>,<?= $getSellerID ?>);"> <i class="fa fa-close" style="font-size:10px;padding-left:110px;color:red"></i></a>
@@ -164,12 +166,25 @@ border-radius: 50%;
            <?php }?>
          </div>
        <?php } ?>
-    </div></div>
+    </div><br>  <form method="post" action="function.php?p=<?=$piid?>&getSellerID=<?= $getSellerID ?>" enctype="multipart/form-data" id="ushobby" >
+    <div class="form-group">  <div class="row">
+        <div class="col-sm-4">
+      <label for="text"><b>Product Attributes:-</b></label>
+    </div>  <div class="col-sm-4">
+      <label for="text"><b>Product Info:-</b></label>
+    </div></div></div><?php for($ip=0;$ip<$countSpec;$ip++) { ?>
+    <div class="form-group">  <div class="row">
+        <div class="col-sm-4"><input value="<?=$getSpec[$ip]['aid']?>" type="hidden" name="aid<?=$ip?>">
+      <input value="<?=$getSpec[$ip]['iattribute']?>" type="text" class="form-control" name="iattribute<?=$ip?>" required>
+    </div>  <div class="col-sm-4">
+        <input value="<?=$getSpec[$ip]['iinfo']?>" type="text" class="form-control" name="iinfo<?=$ip?>"  required>
+    </div></div></div><?php } ?><input value="<?=$ip?>" type="hidden" name="naid">
   </div>
-    <div class="col-sm-8">
+  </div>
+    <div class="col-sm-6">
       <div class="modal-body">
-        <?=$updat ?>
-        <form method="post" action="function.php?p=<?=$piid?>&getSellerID=<?= $getSellerID ?>" enctype="multipart/form-data" id="ushobby" >
+
+
           <div class="form-group">
             <label for="text">Item Name:</label>
             <input type="text" class="form-control" value="<?= $product[0]['iname']?>" name="iname" required>
@@ -195,7 +210,7 @@ border-radius: 50%;
                <div class="form-group">
                <label for="sel1">Category(select one):</label>
                  <select class="form-control" id="sel1"  name="icategory">
-                   <option><?=$product[0]['ncategory']?></option>
+                   <option value="<?=$product[0]['cid']?>"><?=$product[0]['ncategory']?></option>
                    <option>None</option>
                    <?php for($ic=0;$ic<$categoryCount;$ic++) { ?>
                     <option value="<?=$categoryInfo[$ic]['cid'] ?>"><?=$categoryInfo[$ic]['ncategory'] ?></option>

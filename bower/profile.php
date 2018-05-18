@@ -232,7 +232,7 @@ border-radius: 50%;
            </div>
            <div class="form-group">
              <label for="text">Item Detail:</label>
-             <textarea type="text" class="form-control" name="idetail" required> </textarea>
+             <textarea  type="text" class="form-control" placeholder="Product Description"  name="idetail" required></textarea>
            </div>
            <div class="form-group">
              <label for="text">Item Price:</label>
@@ -291,7 +291,9 @@ border-radius: 50%;
        <td><?= $product[$i]['iname']?></td>
        <td><?= $product[$i]['idetail']?></td>
        <td><?= $product[$i]['iprice']?></td>
-       <td><a href="#" onclick="confirmDelete(<?php echo $product[$i]['id']; ?>);" >Delete</a> or  <a href="editProduct.php?p=<?=$product[$i]['id'] ?>&getSellerID=<?= $product[$i]['uid'] ?>" style="text-decoration:none;"> EDIT</a> </form></td>
+       <td><a href="#" onclick="confirmDelete(<?php echo $product[$i]['id']; ?>);" >Delete</a> or  <a href="editProduct.php?p=<?=$product[$i]['id'] ?>&getSellerID=<?= $product[$i]['uid'] ?>" style="text-decoration:none;"> EDIT</a> </form>
+        <br><br><a href="addspecification.php?p=<?=$product[$i]['id'] ?>" style="text-decoration:none;"> Add Product Specifications </a>
+       </td>
      </tr>
      <?php } ?>
    </tbody>

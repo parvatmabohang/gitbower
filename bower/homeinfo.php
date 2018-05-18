@@ -106,6 +106,37 @@ $categorysInfo=$ct->categorysInfo($cat);
             <input type="hidden" value="<?= $product[0]['uemail'] ?>" name="pemail">
             <button type="submit" class="btn btn-primary" name="sendmail">Buy</button></form>
       </div>
+      <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#home">Description</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#menu1">Specification</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#menu2">Reviews</a>
+    </li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div id="home" class="container tab-pane active"><br>
+      <br>
+      <pre><?= $product[0]['idetail'] ?></pre>
+    </div>
+    <div id="menu1" class="container tab-pane fade"><br>
+
+      <?php $cproduct=count($product); for($i=0;$i<$cproduct;$i++){
+         if($product[$i]['aid']==$product[$i-1]['aid']){  } else { ?>
+
+      <b><?= $product[$i]['iattribute'] ?></b> :- <i><?= $product[$i]['iinfo'] ?></i> <br>
+    <?php } }?>
+    </div>
+    <div id="menu2" class="container tab-pane fade"><br>
+      <br>
+      <p>Not Available...</p>
+    </div>
+  </div>
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
@@ -126,9 +157,14 @@ $categorysInfo=$ct->categorysInfo($cat);
                 <input placeholder="Enter Email" type="email" class="form-control" name="semail" required>
               </div>
               <div class="form-group">
+                <label for="text">Contact No:</label>
+                <input placeholder="Enter Contact Number" type="number" class="form-control" name="scontact" required>
+              </div>
+              <div class="form-group">
                 <label for="text">Your Comment:</label>
                 <textarea type="text" class="form-control" name="scomment" required> </textarea>
               </div>
+              <input type="hidden" value="<?= $cat ?>" name="pcat">
               <input type="hidden" value="<?= $product[0]['id'] ?>" name="pid">
               <div class="g-recaptcha" data-sitekey="6LcYg1kUAAAAAGAsJqOx3UXogIjk4mWYaCyZg5XK"></div>
                <br>
