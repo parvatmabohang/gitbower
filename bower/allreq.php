@@ -22,7 +22,7 @@ $getReq=$et->getallReq($uid);
 $countgetReq=count($getReq);
 $categoryInfo=$ct->categoryInfo();
 $categoryCount=count($categoryInfo);
-$categorysInfo=$ct->categorysInfo($cId);
+//$categorysInfo=$ct->categorysInfo($cId);
 ?>
 <html>
 <head>
@@ -154,13 +154,46 @@ border-radius: 50%;
         <!-- Modal body -->
         <div class="modal-body">
           <?php for ($i = 0;$i<$countgetReq;$i++) { ?>
-           <a class="dropdown-item" href="#"><span style="color:red;"><?=$getReq[$i]['requestuid'] ?></span> requested you for product <span style="color:red;"><?=$getReq[$i]['reqiid'] ?></span></a>
+           <a class="dropdown-item" href="#"><span style="color:red;"><?=$getReq[$i]['requestuid'] ?></span> requested you for product-ID <span style="color:red;"><?=$getReq[$i]['reqiid'] ?></span></a>
            <div class="dropdown-divider"></div>
          <?php } ?>
 
         </div>
 
       </div>
+    </div>
+    <div class="container">
+    <table id="toop" class="table table-bordered">
+       <thead>
+         <tr>
+           <th>Requested Product-ID</th>
+           <th>Request ID</th>
+           <th>Requester Name</th>
+           <th>Requester Email</th>
+           <th>Requester Comment</th>
+           <th>Requested Product Image</th>
+           <th>Requested Product Name</th>
+           <th>Requested Product Detail</th>
+           <th>Requested Product Price</th>
+        </tr>
+       </thead>
+       <tbody>
+         <?php
+            for ($i = 0;$i<$countgetReq;$i++) { ?>
+         <tr><?php if($getReq[$i]['reqid']==$getReq[$i-1]['reqid']){  } else { ?>
+           <td><?= $getReq[$i]['id']?></td>
+           <td><?= $getReq[$i]['reqid']?></td>
+           <td><?= $getReq[$i]['requestuname']?></td>
+           <td><?= $getReq[$i]['requestuid']?></td>
+           <td><?= $getReq[$i]['requestucomment']?></td>
+           <td><img src="<?= $getReq[$i]['ipic'] ?>" height="92" width="92"></td>
+           <td><?= $getReq[$i]['iname']?></td>
+           <td><?= $getReq[$i]['idetail']?></td>
+           <td><?= $getReq[$i]['iprice']?></td>
+         </tr>
+       <?php } } ?>
+       </tbody>
+     </table>
     </div>
     <script>
     function dcategory(icat,cat)
@@ -169,6 +202,11 @@ border-radius: 50%;
          window.location.href = 'categoryEdit.php?dId='+icat+'&cId='+cat
 
     }
+    </script>
+    <script>
+    $(document).ready( function () {
+        $('#toop').DataTable();
+    });
     </script>
 </body>
 </html>

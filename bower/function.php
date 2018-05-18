@@ -5,6 +5,8 @@ $uidemail = $_SESSION['uid'][2];
 $idmail = "";
 $uidmail="";
 $piid = "";
+$cat="";
+$cat = $_GET['cat'];
 $idmail=$_GET['idmail'];
 $uidmail = $_GET['uidmail'];
 $piid=$_GET['p'];
@@ -114,12 +116,14 @@ if (isset($_POST['sendmail'])) {
 if (isset($_POST['g-recaptcha-response']) && $_POST['g-recaptcha-response'] ) {
     //var_dump($_POST);
     $reqemail = $_POST['semail'];
+    $reqname = $_POST['sname'];
+    $reqcomment = $_POST['scomment'];
     $reqiid = $_POST['pid'];
-    $ret = $et->insertReq($reqemail,$reqiid);
+    $ret = $et->insertReq($reqemail,$reqname,$reqcomment,$reqiid);
     if ($ret) {
-        header("location:homeinfo.php?p=$idmail&q=$uidmail&msg=1");
+        header("location:homeinfo.php?cat=$cat&p=$idmail&q=$uidmail&msg=1");
     } else {
-        header("location:homeinfo.php?p=$idmail&q=$uidmail&msg=2");
+        header("location:homeinfo.php?cat=$cat&p=$idmail&q=$uidmail&msg=2");
     }
     //$arr = json_decode($rsp,TRUE);
 }

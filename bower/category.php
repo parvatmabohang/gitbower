@@ -5,6 +5,7 @@ $product = $pt->getcsProduct($cat);
 $icount=count($product);
 $categoryInfo=$ct->categoryInfo();
 $categoryCount=count($categoryInfo);
+$categorysInfo=$ct->categorysInfo($cat);
 ?>
 <html>
 <head>
@@ -59,7 +60,7 @@ $categoryCount=count($categoryInfo);
       <ol class="breadcrumb">
        <li class="breadcrumb-item"><a href="login.php">Login</a></li>
        <li class="breadcrumb-item"><a href="home.php">Home</a></li>
-       <li class="breadcrumb-item active" aria-current="page">Category</li>
+       <li class="breadcrumb-item active" aria-current="page">Category-<?= $categorysInfo['ncategory'] ?></li>
       </ol>
      </nav>
    </div><br>
@@ -85,7 +86,7 @@ $categoryCount=count($categoryInfo);
        <td><?= $product[$i]['iname']?></td>
        <td><?= $product[$i]['idetail']?></td>
        <td><?= $product[$i]['iprice']?></td>
-       <td><a href="homeinfo.php?p=<?=$product[$i]['id']?>&q=<?=$product[$i]['uid']?>  ">Want to buy</a></td>
+       <td><a href="homeinfo.php?cat=<?=$cat?>&p=<?=$product[$i]['id']?>&q=<?=$product[$i]['uid']?>  ">Want to buy</a></td>
      </tr>
      <?php } ?>
    </tbody>

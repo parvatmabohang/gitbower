@@ -2,6 +2,7 @@
 require("unity.php");
 $piid=$_GET['p'];
 $puid=$_GET['q'];
+$cat=$_GET['cat'];
 if (isset($_POST['logout'])) {
     session_destroy();
     header("location:login.php");
@@ -19,6 +20,7 @@ if ($ty == 2) {
 $product = $pt->getsoProduct($puid,$piid);
 $b=0;
 while ($piid == $product[$b]['id']){$b++;}
+$categorysInfo=$ct->categorysInfo($cat);
 ?>
 <html>
 <head>
@@ -61,7 +63,8 @@ while ($piid == $product[$b]['id']){$b++;}
       <ol class="breadcrumb">
        <li class="breadcrumb-item"><a href="login.php">Login</a></li>
        <li class="breadcrumb-item"><a href="home.php">Home</a></li>
-       <li class="breadcrumb-item active" aria-current="page">Homeinfo</li>
+       <li class="breadcrumb-item active"><a href="category.php?cat=<?=$cat?>">Category-<?= $categorysInfo['ncategory'] ?></a></li>
+       <li class="breadcrumb-item active" aria-current="page">Homeinfo-<?= $product[0]['iname']?></li>
       </ol>
      </nav>
    </div><br>
@@ -113,10 +116,18 @@ while ($piid == $product[$b]['id']){$b++;}
 
           <!-- Modal body -->
           <div class="modal-body">
-            <form method="post" action="function.php?idmail=<?= $product[0]['id'] ?>&uidmail=<?= $product[0]['uid'] ?>" id="ushobby" >
+            <form method="post" action="function.php?cat=<?=$cat?>&idmail=<?= $product[0]['id'] ?>&uidmail=<?= $product[0]['uid'] ?>" id="ushobby" >
+              <div class="form-group">
+                <label for="text">Username:</label>
+                <input placeholder="Enter Username" type="text" class="form-control" name="sname" required>
+              </div>
               <div class="form-group">
                 <label for="text">Email:</label>
-                <input placeholder="Enter Email" type="text" class="form-control" name="semail" required>
+                <input placeholder="Enter Email" type="email" class="form-control" name="semail" required>
+              </div>
+              <div class="form-group">
+                <label for="text">Your Comment:</label>
+                <textarea type="text" class="form-control" name="scomment" required> </textarea>
               </div>
               <input type="hidden" value="<?= $product[0]['id'] ?>" name="pid">
               <div class="g-recaptcha" data-sitekey="6LcYg1kUAAAAAGAsJqOx3UXogIjk4mWYaCyZg5XK"></div>
