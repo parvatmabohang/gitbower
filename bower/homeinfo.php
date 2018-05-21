@@ -78,7 +78,7 @@ $categorysInfo=$ct->categorysInfo($cat);
     <div class="col-sm-4">
       <p>Item Images:</p>
             <div class="fotorama" data-nav="thumbs" data-allowfullscreen="true">
-        <?php for ($f = 0;$f <=$b-1; $f++ ) {  ?><?php $iexplode=explode("/",$product[$f]['ipic']);$iexp=$iexplode[0]."/600".$iexplode[1];?>
+        <?php for ($f = 0;$f <=$b-1; $f++ ) { ?><?php $iexplode=explode("/",$product[$f]['ipic']);$iexp=$iexplode[0]."/600".$iexplode[1];?>
               <?php $tcount = strlen($product[0]['ipic']); if($tcount !=0){?>  <img  src="<?= $iexp?>"> <?php } else { ?><h5> No images... </h5> <? }?>
              </a>
        <?php } ?>
